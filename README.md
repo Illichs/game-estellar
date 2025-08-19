@@ -1,6 +1,11 @@
-#Space Sentences: Treinamento e Desenvolvimento Gamificado
+#Space Sentences: Treinamento e Desenvolvimento Gamificado..
+
+#space
 
 Um jogo educacional interativo projetado para gamificar o treinamento, aprimorando a tomada de decisão e o raciocínio rápido em cenários de trabalho.
+
+
+
 
 🎯 Sobre o Projeto
 
