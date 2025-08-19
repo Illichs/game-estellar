@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Sentences - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div class="container">
+        <h1>Space Sentences</h1>
+        <div class="form-container">
+            <h2>Bem-vindo, Cadete Espacial!</h2>
+            <p>Prepare-se para uma missão de conhecimento. Frases corretas e incorretas flutuarão pelo espaço. Sua missão é clicar apenas nas frases gramaticalmente corretas o mais rápido que puder. O futuro da gramática espacial depende de você! Você tem 3 vidas. Boa sorte!</p>
+            
+            <form id="loginForm">
+                <input type="text" id="fullname" placeholder="Nome Completo" required>
+                <input type="email" id="email" placeholder="Seu e-mail" required>
+                
+                <label for="difficulty">Escolha a dificuldade:</label>
+                <select id="difficulty">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                </select>
+                
+                <button type="submit">Iniciar Missão</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

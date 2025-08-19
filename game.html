@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Sentences - Em Jogo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div class="game-ui">
+        <div class="ui-item">
+            <h3>Tempo</h3>
+            <p id="timer">60</p>
+        </div>
+        <div class="ui-item">
+            <h3>Pontuação</h3>
+            <p id="score">0</p>
+        </div>
+        <div class="ui-item">
+            <h3>Vidas</h3>
+            <p id="lives">❤️❤️❤️</p>
+        </div>
+    </div>
+
+    <div id="game-container">
+        </div>
+
+    <div id="gameOverScreen" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <h2 id="gameOverTitle">Fim da Missão!</h2>
+            <p>Sua pontuação final foi: <span id="finalScore"></span></p>
+            <button onclick="window.location.href='index.html'">Jogar Novamente</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
