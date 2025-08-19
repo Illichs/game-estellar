@@ -3,9 +3,7 @@
 Um jogo educacional interativo projetado para gamificar o treinamento, aprimorando a tomada de decisão e o raciocínio rápido em cenários de trabalho.
 
 🎯 Sobre o Projeto
-
 Em ambientes corporativos, a capacidade de pensar com clareza e tomar decisões acertadas sob pressão é uma competência essencial. No entanto, os métodos tradicionais de treinamento podem, por vezes, ser monótonos e pouco eficazes para desenvolver essa agilidade mental.
-
 
 O Space Sentences nasceu como uma solução para este desafio. Este projeto transforma o aprendizado em uma missão espacial engajadora, onde o jogador (ou colaborador) deve exercitar seu conhecimento e agilidade para navegar por um "espaço sideral" de informações. O objetivo é simples na forma, mas profundo no propósito: gamificar o pensar e reforçar colocações rotineiras de trabalho de uma maneira divertida e memorável.
 
