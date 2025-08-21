@@ -1,42 +1,223 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Sentences - Em Jogo</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="stars"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
+// Ficheiro: script.js
 
-    <div class="game-ui">
-        <div class="ui-item">
-            <h3>Tempo</h3>
-            <p id="timer">60</p>
-        </div>
-        <div class="ui-item">
-            <h3>Pontuação</h3>
-            <p id="score">0</p>
-        </div>
-        <div class="ui-item">
-            <h3>Vidas</h3>
-            <p id="lives">❤️❤️❤️</p>
-        </div>
-    </div>
+// --- LÓGICA DA PÁGINA DE LOGIN (index.html) ---
 
-    <div id="game-container">
-        </div>
-
-    <div id="gameOverScreen" class="modal-container" style="display: none;">
-        <div class="modal-content">
-            <h2 id="gameOverTitle">Fim da Missão!</h2>
-            <p>Sua pontuação final foi: <span id="finalScore"></span></p>
-            <button onclick="window.location.href='index.html'">Jogar Novamente</button>
-        </div>
-    </div>
+// Verifica se estamos na página de login
+if (document.getElementById('loginForm')) {
+    const loginForm = document.getElementById('loginForm');
     
-    <script src="script.js"></script>
-</body>
-</html>
+    // Lógica do Formulário de Login
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+
+        const fullname = document.getElementById('fullname').value;
+        const email = document.getElementById('email').value;
+
+        // Armazena os dados no navegador
+        localStorage.setItem('playerFullName', fullname);
+        localStorage.setItem('playerEmail', email);
+        
+        // DIFICULDADE NÃO É MAIS ARMAZENADA
+        // localStorage.setItem('gameDifficulty', difficulty);
+
+        window.location.href = 'game.html';
+    });
+
+    // Lógica do Modal de Tutorial
+    const tutorialModal = document.getElementById('tutorialModal');
+    const tutorialBtn = document.getElementById('tutorialBtn');
+    const closeBtn = document.querySelector('.close-btn');
+
+    tutorialBtn.onclick = function() {
+        tutorialModal.style.display = 'flex';
+    }
+    closeBtn.onclick = function() {
+        tutorialModal.style.display = 'none';
+    }
+    window.onclick = function(event) {
+        if (event.target == tutorialModal) {
+            tutorialModal.style.display = 'none';
+        }
+    }
+}
+
+
+// --- LÓGICA DA PÁGINA DO JOGO (game.html) ---
+
+if (document.getElementById('game-container')) {
+    // Elementos da Interface
+    const timerEl = document.getElementById('timer');
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const gameContainer = document.getElementById('game-container');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+    const gameOverTitleEl = document.getElementById('gameOverTitle');
+
+    // Variáveis do Jogo
+    let score = 0;
+    let lives = 3;
+    let timeLeft = 60;
+    let timerInterval;
+    const sentencesOnScreen = [];
+    
+    // --- LÓGICA DE DIFICULDADE PROGRESSIVA ---
+    let currentLevel = 1;
+    const levelThresholds = {
+        2: 200, // Passa para o nível 2 com 200 pontos
+        3: 500  // Passa para o nível 3 com 500 pontos
+    };
+
+    const config = {
+        1: { levelName: 'easy', sentenceCount: 5, speed: 1 },
+        2: { levelName: 'medium', sentenceCount: 8, speed: 1.5 },
+        3: { levelName: 'hard', sentenceCount: 12, speed: 2 }
+    };
+    let gameConfig = config[currentLevel];
+
+    // Banco de Frases (mantido)
+    const allSentences = [
+        { text: 'Nós fomos ao parque ontem.', correct: true },
+        { text: 'A gente vamos na praia amanhã.', correct: false },
+        { text: 'Fazem dois anos que não o vejo.', correct: false },
+        { text: 'Existem muitas estrelas no céu.', correct: true },
+        { text: 'Houveram muitos problemas na reunião.', correct: false },
+        { text: 'Ela gosta de frutas, legumes e vegetais.', correct: true },
+        { text: 'Se eu ver ele, eu aviso.', correct: false },
+        { text: 'O gato deitou-se no sofá.', correct: true },
+        { text: 'Para mim fazer o trabalho, preciso de silêncio.', correct: false },
+        { text: 'A questão foi resolvida por ele.', correct: true },
+        { text: 'Comprei o livro para eu ler.', correct: true },
+    ];
+
+    function startGame() {
+        updateUI();
+        startTimer();
+        for (let i = 0; i < gameConfig.sentenceCount; i++) {
+            createSentence();
+        }
+        animateSentences();
+    }
+
+    function updateUI() {
+        scoreEl.textContent = score;
+        livesEl.textContent = '❤️'.repeat(lives);
+    }
+    
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                endGame(false);
+            }
+        }, 1000);
+    }
+
+    function createSentence() {
+        const sentenceData = allSentences[Math.floor(Math.random() * allSentences.length)];
+        const sentenceEl = document.createElement('div');
+        sentenceEl.classList.add('sentence');
+        sentenceEl.textContent = sentenceData.text;
+        sentenceEl.dataset.correct = sentenceData.correct;
+
+        const x = Math.random() * (gameContainer.clientWidth - 200);
+        const y = Math.random() * (gameContainer.clientHeight - 100);
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = gameConfig.speed * (Math.random() * 0.5 + 0.75);
+        
+        sentenceEl.style.left = `${x}px`;
+        sentenceEl.style.top = `${y}px`;
+        
+        const sentenceObj = {
+            element: sentenceEl, x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed
+        };
+
+        sentencesOnScreen.push(sentenceObj);
+        gameContainer.appendChild(sentenceEl);
+        sentenceEl.addEventListener('click', handleSentenceClick);
+    }
+
+    function handleSentenceClick(event) {
+        const clickedEl = event.target;
+        const isCorrect = clickedEl.dataset.correct === 'true';
+
+        if (isCorrect) {
+            score += 10 + Math.floor(timeLeft / 10);
+            removeSentence(clickedEl);
+            createSentence();
+            checkLevelUp(); // Verifica se o jogador passou de nível
+        } else {
+            lives--;
+            if (lives <= 0) {
+                endGame(false);
+            }
+        }
+        updateUI();
+    }
+
+    // Função que verifica e aplica a progressão de dificuldade
+    function checkLevelUp() {
+        const nextLevel = currentLevel + 1;
+        // Verifica se existe um próximo nível e se a pontuação foi atingida
+        if (levelThresholds[nextLevel] && score >= levelThresholds[nextLevel]) {
+            currentLevel = nextLevel;
+            gameConfig = config[currentLevel];
+            
+            // Adiciona mais frases na tela para corresponder à nova dificuldade
+            const sentencesToAdd = gameConfig.sentenceCount - sentencesOnScreen.length;
+            for(let i = 0; i < sentencesToAdd; i++) {
+                createSentence();
+            }
+            // (Opcional) Acelerar frases existentes
+            sentencesOnScreen.forEach(s => {
+                s.vx *= 1.2;
+                s.vy *= 1.2;
+            });
+
+            // Feedback visual para o jogador (pode ser melhorado)
+            alert(`Você avançou para o Nível ${currentLevel}! O desafio aumentou!`);
+        }
+    }
+    
+    function removeSentence(sentenceEl) {
+        const index = sentencesOnScreen.findIndex(s => s.element === sentenceEl);
+        if (index > -1) {
+            sentencesOnScreen.splice(index, 1);
+        }
+        sentenceEl.remove();
+    }
+
+    function animateSentences() {
+        for (const sentence of sentencesOnScreen) {
+            sentence.x += sentence.vx;
+            sentence.y += sentence.vy;
+            if (sentence.x <= 0 || sentence.x + sentence.element.clientWidth >= gameContainer.clientWidth) {
+                sentence.vx *= -1;
+            }
+            if (sentence.y <= 0 || sentence.y + sentence.element.clientHeight >= gameContainer.clientHeight) {
+                sentence.vy *= -1;
+            }
+            sentence.element.style.left = `${sentence.x}px`;
+            sentence.element.style.top = `${sentence.y}px`;
+        }
+        requestAnimationFrame(animateSentences);
+    }
+    
+    function endGame(win) {
+        clearInterval(timerInterval);
+        gameContainer.innerHTML = '';
+        sentencesOnScreen.length = 0;
+        finalScoreEl.textContent = score;
+        if (win) {
+            gameOverTitleEl.textContent = "Parabéns, você venceu!";
+        } else {
+            gameOverTitleEl.textContent = "Fim da Missão!";
+        }
+        gameOverScreen.style.display = 'flex';
+    }
+
+    startGame();
+}
