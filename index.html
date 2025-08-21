@@ -3,37 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Sentences - Login</title>
-    <link rel="stylesheet" href="style.css">
+    <title>O Conflito Gramatical - Login</title> <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="stars"></div>
     <div id="stars2"></div>
     <div id="stars3"></div>
+    
+    <img src="Astron Voo.jpg" alt="Astronauta voando" class="astronaut">
 
     <div class="container">
-        <h1>Space Sentences</h1>
+        <h1>O Conflito Gramatical</h1>
         <div class="form-container">
             <h2>Bem-vindo, Cadete Espacial!</h2>
-            <p>Prepare-se para uma missão de conhecimento. Frases corretas e incorretas flutuarão pelo espaço. Sua missão é clicar apenas nas frases gramaticalmente corretas o mais rápido que puder. O futuro da gramática espacial depende de você! Boa sorte!</p>
+            <p>Prepare-se para uma missão de reconhecimento nos confins da galáxia da comunicação. O futuro da gramática espacial depende de você! Boa sorte!</p>
             
             <form id="loginForm">
                 <input type="text" id="fullname" placeholder="Nome Completo" required>
-                <input type="email" id="email" placeholder="Seu e-mail" required>
-                
-                <label for="difficulty">Escolha a dificuldade:</label>
-                <select id="difficulty">
-                    <option value="easy">Fácil</option>
-                    <option value="medium">Médio</option>
-                    <option value="hard">Difícil</option>
-                </select>
+                <input type="email" id="email" placeholder="Seu melhor e-mail" required>
                 
                 <button type="submit">Iniciar Missão</button>
+                <button type="button" id="tutorialBtn">Como Jogar?</button>
             </form>
+        </div>
+    </div>
+
+    <div id="tutorialModal" class="modal-container" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Instruções da Missão</h2>
+            <p>Sua missão é simples, mas desafiadora:</p>
+            <ul>
+                <li>Frases corretas e incorretas flutuarão pelo espaço.</li>
+                <li>Clique <strong>apenas nas frases gramaticalmente corretas</strong>.</li>
+                <li>Quanto mais rápido você acertar, mais pontos ganha.</li>
+                <li>Você começa com 3 vidas. Um clique errado custa uma vida.</li>
+                <li>O jogo não tem fim! Acumule pontos para subir de nível e aumentar o desafio.</li>
+            </ul>
+            <p>Boa sorte, Cadete!</p>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-
 </html>
