@@ -5,50 +5,83 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0d0d21; /* Um azul bem escuro para o fundo */
+    background-color: #0d0d21;
     color: #ffffff;
-    overflow: hidden; /* Esconde barras de rolagem */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-/* Efeito de estrelas animadas no fundo */
-@keyframes move-twink-back {
-    from {background-position:0 0;}
-    to {background-position:-10000px 5000px;}
+/* --- ANIMAÇÃO DE FUNDO ATUALIZADA --- */
+@keyframes moveDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(100%); }
+}
+
+.stars-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -3;
 }
 
 #stars, #stars2, #stars3 {
     position: absolute;
-    top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
     height: 100%;
-    display: block;
-    background-repeat: repeat;
-    background-position: 0 0;
+    background-repeat: repeat-y;
+    background-position: center;
+    animation-name: moveDown;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 #stars {
     background-image: url('https://www.script-tutorials.com/demos/360/images/stars.png');
+    background-size: cover;
+    animation-duration: 50s; /* Mais lento */
     z-index: -3;
-    animation: move-twink-back 200s linear infinite;
 }
 #stars2 {
     background-image: url('https://www.script-tutorials.com/demos/360/images/twinkling.png');
+    background-size: cover;
+    animation-duration: 25s; /* Velocidade média */
     z-index: -2;
-    animation: move-twink-back 150s linear infinite;
 }
 #stars3 {
     background-image: url('https://www.script-tutorials.com/demos/360/images/clouds.png');
-    z-index: -1;
-    animation: move-twink-back 100s linear infinite;
     opacity: 0.3;
+    animation-duration: 15s; /* Mais rápido */
+    z-index: -1;
 }
+
+/* --- ANIMAÇÃO DO ASTRONAUTA --- */
+@keyframes flyUp {
+    0% {
+        transform: translateY(120vh) rotate(5deg);
+    }
+    100% {
+        transform: translateY(-20vh) rotate(-5deg);
+    }
+}
+
+.astronaut {
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    width: 150px; /* Ajuste o tamanho conforme necessário */
+    height: auto;
+    z-index: 5;
+    animation: flyUp 15s linear infinite;
+    animation-delay: 5s; /* Começa após 5 segundos */
+}
+
 
 /* --- Estilos da Página de Login (index.html) --- */
 .container {
@@ -57,7 +90,7 @@ body {
 }
 
 .form-container {
-    background-color: rgba(8, 138, 133, 0.2); /* #088a85 com transparência */
+    background-color: rgba(8, 138, 133, 0.2);
     padding: 30px;
     border-radius: 15px;
     border: 1px solid #088a85;
@@ -72,7 +105,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-input, select {
+input {
     width: 90%;
     padding: 12px;
     margin: 10px 0;
@@ -93,6 +126,8 @@ button {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 15px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 button:hover {
@@ -100,7 +135,73 @@ button:hover {
     box-shadow: 0 0 15px #0abfba;
 }
 
-/* --- Estilos da Página do Jogo (game.html) --- */
+/* Estilo específico para o botão de tutorial */
+#tutorialBtn {
+    background-color: transparent;
+    border: 1px solid #088a85;
+}
+
+#tutorialBtn:hover {
+    background-color: #088a85;
+}
+
+
+/* --- Estilos do Modal de Tutorial --- */
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-content {
+    background-color: #1a1a3a;
+    padding: 20px 40px 40px 40px;
+    border-radius: 15px;
+    border: 1px solid #088a85;
+    text-align: left;
+    box-shadow: 0 0 30px #088a85;
+    max-width: 600px;
+    position: relative;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #0abfba;
+}
+
+.modal-content ul {
+    list-style-type: '➤ ';
+    padding-left: 20px;
+}
+
+.modal-content li {
+    margin-bottom: 10px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #0abfba;
+}
+
+
+/* --- ESTILOS DO JOGO (mantidos do original) --- */
 #game-container {
     position: absolute;
     top: 0;
@@ -148,7 +249,7 @@ button:hover {
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.2s;
-    user-select: none; /* Impede que o texto seja selecionado */
+    user-select: none;
     font-size: 1.1em;
     text-align: center;
 }
@@ -158,25 +259,6 @@ button:hover {
     box-shadow: 0 0 15px #0abfba;
 }
 
-/* --- Modal de Fim de Jogo --- */
-.modal-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#gameOverScreen { /* Renomeado para não conflitar com .modal-container */
     z-index: 20;
-}
-
-.modal-content {
-    background-color: #1a1a3a;
-    padding: 40px;
-    border-radius: 15px;
-    border: 1px solid #088a85;
-    text-align: center;
-    box-shadow: 0 0 30px #088a85;
 }
