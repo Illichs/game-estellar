@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const finalScoreEl = document.getElementById('finalScore');
         const mistakesListEl = document.getElementById('mistakesList');
         const playAgainBtn = document.getElementById('playAgainBtn');
-        const mainMenuBtn = document.getElementById('mainMenuBtn'); // Botão Menu Inicial
+        const mainMenuBtn = document.getElementById('mainMenuBtn');
         
         let score = 0, lives = 3, timeLeft = 60, timerInterval;
         const sentencesOnScreen = [];
@@ -65,15 +65,67 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const levelThresholds = { 2: 350, 3: 900, 4: Infinity };
         const config = { 1: { sentenceCount: 7, speed: 1.3 }, 2: { sentenceCount: 10, speed: 1.8 }, 3: { sentenceCount: 12, speed: 2.4 }};
-        const sentencesByLevel = {
+
+          const sentencesByLevel = {
             1: [
-                { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null }, { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null }, { text: 'Lamento pelo transtorno e agradeço a sua paciência.', correct: true, correction: null }, { text: 'O sistema está instável hoje.', correct: true, correction: null }, { text: 'Por favor, confirme seus dados para eu poder continuar.', correct: true, correction: null }, { text: 'Os sistema estão instáveis hoje.', correct: false, correction: 'Erro de concordância nominal. O correto é: "O sistema está..."' }, { text: 'A gente vamos verificar o que aconteceu.', correct: false, correction: 'Erro de concordância verbal. O correto é: "A gente vai..." ou "Nós vamos..."' }, { text: 'O cliente está de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' }, { text: 'Vou estar verificando sua solicitação.', correct: false, correction: 'Gerundismo. A forma mais direta e profissional é: "Vou verificar sua solicitação."' }, { text: 'Segue em anexo as fatura solicitada.', correct: false, correction: 'Erro de concordância. O correto é: "Segue em anexo a fatura..." ou "Seguem em anexo as faturas..."' }, { text: 'Tem poblemas com sua fatura?', correct: false, correction: 'Erro de ortografia. O correto é "problemas".' }, { text: 'Seje paciente, por favor.', correct: false, correction: 'Erro de conjugação verbal. O correto é "Seja paciente...".' },
+                // FRASES CORRETAS
+                { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null },
+                { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null },
+                { text: 'Agradecemos o seu contato e a sua paciência.', correct: true, correction: null },
+                { text: 'O sistema está instável no momento, peço que aguarde.', correct: true, correction: null },
+                { text: 'Compreendo perfeitamente a sua situação.', correct: true, correction: null },
+                { text: 'Vou verificar o procedimento e já lhe dou um retorno.', correct: true, correction: null },
+                { text: 'Para sua segurança, por favor, confirme seu nome completo.', correct: true, correction: null },
+                { text: 'A questão foi encaminhada para a equipe responsável.', correct: true, correction: null },
+                // FRASES INCORRETAS
+                { text: 'O cliente iniciou o atendimento de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' },
+                { text: 'Eu entendo sua frustração, mais não posso alterar o sistema.', correct: false, correction: 'Erro de ortografia. "Mas" é usado para indicar oposição. "Mais" é usado para indicar quantidade.' },
+                { text: 'Houveram muitas ligações sobre a instabilidade hoje.', correct: false, correction: 'Erro de concordância. O verbo "haver" no sentido de "existir" é impessoal. O correto é: "Houve muitas ligações...".' },
+                { text: 'As informação do cliente não bate com nosso registro.', correct: false, correction: 'Erro de concordância. O correto é: "As informações do cliente não batem...".' },
+                { text: 'Por favor, seje paciente enquanto verifico o ocorrido.', correct: false, correction: 'Erro de ortografia e conjugação. A forma correta do verbo "ser" no imperativo é "seja".' },
+                { text: 'O sistema precisa de mas tempo para processar.', correct: false, correction: 'Erro de ortografia. "Mais" é usado para indicar quantidade. "Mas" é usado para indicar oposição.' },
+                { text: 'Segue anexo as duas faturas que você solicitou.', correct: false, correction: 'Erro de concordância. O correto é: "Seguem anexas as duas faturas...".' },
+                { text: 'Acho que o cliente está com um poblema na conexão.', correct: false, correction: 'Erro de ortografia. A grafia correta da palavra é "problema".' }
             ],
             2: [
-                { text: 'Compreendo sua frustração e lamento pelo ocorrido.', correct: true, correction: null }, { text: 'Seguem anexas as faturas solicitadas.', correct: true, correction: null }, { text: 'Houveram muitas reclamações sobre esse serviço.', correct: false, correction: 'O verbo "haver" no sentido de "existir" é impessoal: "Houve muitas reclamações..."' }, { text: 'Faz muitos anos que sou cliente.', correct: true, correction: null }, { text: 'É proíbido a entrada de pessoas não autorizadas.', correct: false, correction: 'Sem o artigo, a concordância é "proibido". Com artigo "a", o correto é: "É proibida a entrada..."' }, { text: 'Estou aqui para o que for preciso.', correct: true, correction: null }, { text: 'Ficou algumas dúvidas sobre o procedimento?', correct: false, correction: 'Concordância verbal. Correto: "Ficaram algumas dúvidas?"' }, { text: 'Existe muitas possibilidades de resolvermos isso.', correct: false, correction: 'Concordância verbal. Correto: "Existem muitas possibilidades..."' }
+                // FRASES CORRETAS
+                { text: 'A supervisora nos orientou para que tivéssemos discrição.', correct: true, correction: null },
+                { text: 'O prazo para eu finalizar o relatório é amanhã.', correct: true, correction: null },
+                { text: 'Por favor, ratifique os dados para prosseguirmos com o cadastro.', correct: true, correction: null },
+                { text: 'Se o problema persistir, entre em contato com o suporte.', correct: true, correction: null },
+                { text: 'Ele se esforçou a fim de bater a meta do mês.', correct: true, correction: null },
+                { text: 'Em vez de cancelar, o cliente decidiu alterar o plano.', correct: true, correction: null },
+                { text: 'Quando o cliente vier à loja, entregue este documento a ele.', correct: true, correction: null },
+                { text: 'É importante que você mantenha a calma durante atendimentos difíceis.', correct: true, correction: null },
+                // FRASES INCORRETAS
+                { text: 'A gerente pediu para mim fazer a ligação para o cliente.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "pediu para eu fazer...".' },
+                { text: 'Quando você ver o novo chamado, pode assumir a tarefa.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "ver" é "vir". O correto é: "Quando você vir...".' },
+                { text: 'Peço total descrição ao manusear os dados sensíveis.', correct: false, correction: 'Erro de vocabulário. "Discrição" significa reserva, prudência. "Descrição" é o ato de descrever. O correto é: "discrição".' },
+                { text: 'Estou organizando a planilha afim de otimizar o processo.', correct: false, correction: 'Erro de ortografia. "A fim de" (separado) significa "com o objetivo de". "Afim" (junto) é um adjetivo que significa "semelhante".' },
+                { text: 'Se o sistema manter o erro, teremos que abrir um chamado.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "manter" é "mantiver". O correto é: "Se o sistema mantiver...".' },
+                { text: 'Não há mais tarefas para mim fazer hoje.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "tarefas para eu fazer...".' },
+                { text: 'Preciso que você retifique o recebimento deste e-mail.', correct: false, correction: 'Erro de vocabulário. "Ratificar" significa confirmar. "Retificar" significa corrigir. O correto é: "ratifique o recebimento".' },
+                { text: 'Ao invés de enviar um e-mail, ele preferiu ligar.', correct: false, correction: 'A expressão "em vez de" é mais adequada para substituições em geral. "Ao invés de" se usa para opostos diretos (subir/descer).' }
             ],
             3: [
-                { text: 'Agradecemos à preferência.', correct: false, correction: 'Não há crase antes de substantivos gerais sem artigo definido. Correto: "Agradecemos a preferência."' }, { text: 'O procedimento visa à melhoria contínua dos nossos serviços.', correct: true, correction: null }, { text: 'Vou verificar o seu caso e dar-lhe um retorno o mais breve possível.', correct: true, correction: null }, { text: 'Prefiro mais agilidade do que um desconto.', correct: false, correction: 'O verbo "preferir" já indica uma escolha. Correto: "Prefiro agilidade a um desconto."' }, { text: 'O suporte informou que a situação já foi resolvida.', correct: true, correction: null }, { text: 'Chegamos em São Paulo para a reunião.', correct: false, correction: 'Verbos de movimento usam "a". Correto: "Chegamos a São Paulo..."' }, { text: 'O produto está disponível a pronta entrega.', correct: false, correction: 'A expressão "à pronta entrega" exige crase.' }, { text: 'Ficamos felizes em tê-lo como cliente.', correct: true, correction: null }
+                // FRASES CORRETAS
+                { text: 'O motivo por que liguei é para confirmar o seu endereço.', correct: true, correction: null },
+                { text: 'Ele não explicou o porquê de sua ausência na reunião.', correct: true, correction: null },
+                { text: 'Aonde devemos encaminhar esta solicitação de serviço?', correct: true, correction: null },
+                { text: 'Não sei onde a equipe de suporte está alocada.', correct: true, correction: null },
+                { text: 'Existem várias maneiras de contornar este problema.', correct: true, correction: null },
+                { text: 'Havia apenas uma pendência em seu antigo cadastro.', correct: true, correction: null },
+                { text: 'A última atualização do sistema ocorreu há duas semanas.', correct: true, correction: null },
+                { text: 'O técnico chegará ao local daqui a uma hora.', correct: true, correction: null },
+                // FRASES INCORRETAS
+                { text: 'Aonde está o erro que você mencionou no sistema?', correct: false, correction: 'Erro de vocabulário. "Onde" é usado para lugares fixos. "Aonde" é usado com verbos de movimento. O correto é: "Onde está...".' },
+                { text: 'Eu trabalho nesta empresa a mais de cinco anos.', correct: false, correction: 'Erro de ortografia. "Há" (com H) é usado para tempo passado. "A" (sem H) é usado para tempo futuro ou distância.' },
+                { text: 'Você não respondeu o e-mail. Por que?', correct: false, correction: 'Erro de ortografia. "Por quê" (separado e com acento) é usado no final de frases interrogativas.' },
+                { text: 'Deve existir muitas razões para a instabilidade.', correct: false, correction: 'Erro de concordância. O verbo "existir" concorda com o sujeito. O correto é: "Devem existir muitas razões...".' },
+                { text: 'O técnico não sabe onde o time de desenvolvimento foi.', correct: false, correction: 'Erro de vocabulário. Com verbos de movimento (como "ir"), usa-se "aonde". O correto é: "...aonde o time... foi".' },
+                { text: 'Gostaria de entender o porque de tanta demora.', correct: false, correction: 'Erro de ortografia. Quando é um substantivo e significa "o motivo", o correto é "porquê" (junto e com acento).' },
+                { text: 'Daqui há alguns minutos o sistema deve voltar.', correct: false, correction: 'Erro de ortografia. Para indicar tempo futuro, usa-se "a" (sem H). O correto é: "Daqui a alguns minutos...".' },
+                { text: 'A razão porquê ele ligou não foi informada.', correct: false, correction: 'Erro de ortografia. Quando pode ser substituído por "pela qual", o correto é "por que" (separado e sem acento).' }
             ]
         };
         let currentSentences = sentencesByLevel[currentLevel];
@@ -127,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 clickedEl.classList.add('correct-flash');
                 setTimeout(() => {
                     removeSentence(clickedEl);
-                    if (correctHitCounter % 5 === 0 && correctHitCounter > 0) {
+                    if (correctHitCounter > 0 && correctHitCounter % 5 === 0) {
                         refreshBoard(true);
                     } else {
                         checkBoardStateAndReplace();
