@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
             try {
                 const { collection, query, orderBy, limit, getDocs } = window.firestore;
                 const scoresRef = collection(window.db, "highscores");
-                const q = query(scoresRef, orderBy("score", "desc"), limit(10));
+                const q = query(scoresRef, orderBy("score", "desc"), limit(20));
                 
                 const querySnapshot = await getDocs(q);
                 const highScores = [];
@@ -142,7 +142,7 @@ window.addEventListener('DOMContentLoaded', () => {
             try {
                 const { collection, query, orderBy, limit, getDocs } = window.firestore;
                 const scoresRef = collection(window.db, "highscores");
-                const q = query(scoresRef, orderBy("score", "desc"), limit(10));
+                const q = query(scoresRef, orderBy("score", "desc"), limit(20));
                 
                 const querySnapshot = await getDocs(q);
                 const highScores = [];
@@ -437,3 +437,4 @@ window.addEventListener('DOMContentLoaded', () => {
         initializeGame();
     }
 });
+
