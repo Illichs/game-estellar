@@ -1,6 +1,6 @@
 #  O Conflito Gramatical: Treinamento e Desenvolvimento Gamificado.
 
-Um jogo educacional interativo projetado para gamificar o treinamento, aprimorando a tomada de decisão e o raciocínio rápido em cenários de trabalho.
+Um jogo educacional interativo projetado para gamificar os treinamentos, aprimorando a tomada de decisão e o raciocínio rápido em cenários de trabalho.
 
 
 ## **🎯 Sobre o Projeto**  
@@ -13,13 +13,13 @@ O Conflito Gramatical nasceu como uma solução para este desafio. Este projeto 
 A mecânica do jogo foi desenhada para ser intuitiva, mas desafiadora, simulando um ambiente de trabalho dinâmico onde múltiplas informações chegam ao mesmo tempo.\
 A Missão: O jogador é apresentado a uma tela que simula o espaço, com diversas frases (ou "procedimentos", "políticas", "respostas a clientes", etc.) flutuando.\
 O Desafio: Algumas frases estão corretas, outras incorretas. A tarefa é clicar apenas nas corretas.\
-Pressão e Recompensa: Um temporizador regressivo e um sistema de 3 vidas adicionam um elemento de pressão. Acertos rápidos geram mais pontos, incentivando não apenas a precisão, mas também a agilidade.\
+Pressão e Recompensa: Um temporizador regressivo e um sistema de 3 vidas adicionam um elemento de pressão. Acertos rápidos e em sequência geram mais pontos, incentivando não apenas a precisão, mas também a agilidade.\
 Dificuldade Progressiva: Com 3 níveis de dificuldade, o jogo adapta-se a diferentes níveis de habilidade, aumentando a velocidade e a quantidade de estímulos na tela para manter o desafio relevante.
 
 
 ## **💡 Objetivo Pedagógico**
 
-Mais do que um simples jogo, o Conflito Gramatical é uma ferramenta de T&D (Treinamento e Desenvolvimento) com os seguintes objetivos pedagógicos:
+Mais do que um simples jogo, o Conflito Gramatical é uma ferramenta de T&D com os seguintes objetivos pedagógicos:
 Exercitar o Raciocínio Rápido: O ambiente dinâmico força o cérebro a analisar e filtrar informações rapidamente, uma habilidade crucial em qualquer função.
 Reforçar Conhecimento Específico: O conteúdo das frases é 100% personalizável. Pode ser usado para treinar:\
 Gramática e Comunicação: Como na versão atual.\
