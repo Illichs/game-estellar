@@ -3,7 +3,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // --- Bloco de código para index.html ---
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        // Lógica dos Astronautas, Formulário e Modal
         const astroContainer = document.getElementById('astro-container');
         if (astroContainer) {
             const astronautImages = ['Astro Foguete.png', 'Astro Peso.png', 'Astro Super.png', 'Astro Voo.png'];
@@ -28,16 +27,63 @@ window.addEventListener('DOMContentLoaded', () => {
         loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
             localStorage.setItem('playerFullName', document.getElementById('fullname').value);
-            localStorage.setItem('playerEmail', document.getElementById('email').value);
+            localStorage.setItem('playerTeam', document.getElementById('team').value);
             window.location.href = 'game.html';
         });
         
         const tutorialModal = document.getElementById('tutorialModal');
         const tutorialBtn = document.getElementById('tutorialBtn');
-        const closeBtn = tutorialModal.querySelector('.close-btn');
-        tutorialBtn.onclick = function() { tutorialModal.style.display = 'flex'; }
-        closeBtn.onclick = function() { tutorialModal.style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == tutorialModal) { tutorialModal.style.display = 'none'; } }
+        const closeTutorialBtn = tutorialModal.querySelector('.close-btn');
+        tutorialBtn.onclick = () => { tutorialModal.style.display = 'flex'; }
+        closeTutorialBtn.onclick = () => { tutorialModal.style.display = 'none'; }
+        
+        const leaderboardModal = document.getElementById('leaderboardModal');
+        const leaderboardIcon = document.getElementById('leaderboardIcon');
+        const closeLeaderboardBtn = leaderboardModal.querySelector('.close-btn');
+        const highScoresList = document.getElementById('highScoresList');
+
+        const getMedal = (index) => {
+            if (index === 0) return '🥇';
+            if (index === 1) return '🥈';
+            if (index === 2) return '🥉';
+            return '';
+        };
+
+        const updateAndShowLeaderboard = async () => {
+            highScoresList.innerHTML = '<li>Carregando placar...</li>';
+            leaderboardModal.style.display = 'flex'; 
+
+            try {
+                const { collection, query, orderBy, limit, getDocs } = window.firestore;
+                const scoresRef = collection(window.db, "highscores");
+                const q = query(scoresRef, orderBy("score", "desc"), limit(10));
+                
+                const querySnapshot = await getDocs(q);
+                const highScores = [];
+                querySnapshot.forEach((doc) => {
+                    highScores.push(doc.data());
+                });
+
+                if (highScores.length > 0) {
+                    highScoresList.innerHTML = highScores
+                        .map((score, index) => `<li><span class="rank-medal">${getMedal(index)}</span>${index + 1}. ${score.name} - <span>${score.score} pontos</span></li>`)
+                        .join('');
+                } else {
+                    highScoresList.innerHTML = '<li>Nenhuma pontuação registrada. Seja o primeiro!</li>';
+                }
+            } catch (error) {
+                console.error("Erro ao buscar pontuações:", error);
+                highScoresList.innerHTML = '<li>Erro ao carregar o placar. Tente novamente.</li>';
+            }
+        };
+
+        leaderboardIcon.addEventListener('click', updateAndShowLeaderboard);
+        closeLeaderboardBtn.addEventListener('click', () => { leaderboardModal.style.display = 'none'; });
+
+        window.onclick = function(event) {
+            if (event.target == tutorialModal) { tutorialModal.style.display = 'none'; }
+            if (event.target == leaderboardModal) { leaderboardModal.style.display = 'none'; }
+        }
     }
 
     // --- Bloco de código para game.html ---
@@ -63,71 +109,69 @@ window.addEventListener('DOMContentLoaded', () => {
         let correctHitCounter = 0;
         let scoreMultiplier = 1;
 
+        const scoresModal = document.getElementById('scoresModal');
+        const showScoresBtn = document.getElementById('showScoresBtn');
+        const closeScoresBtn = scoresModal.querySelector('.close-scores-btn');
+        const finalHighScoresList = document.getElementById('finalHighScoresList');
+        
+        const getMedal = (index) => {
+            if (index === 0) return '🥇';
+            if (index === 1) return '🥈';
+            if (index === 2) return '🥉';
+            return '';
+        };
+
+        showScoresBtn.addEventListener('click', async () => {
+            finalHighScoresList.innerHTML = '<li>Carregando placar...</li>';
+            scoresModal.style.display = 'flex';
+
+            try {
+                const { collection, query, orderBy, limit, getDocs } = window.firestore;
+                const scoresRef = collection(window.db, "highscores");
+                const q = query(scoresRef, orderBy("score", "desc"), limit(10));
+                
+                const querySnapshot = await getDocs(q);
+                const highScores = [];
+                querySnapshot.forEach((doc) => {
+                    highScores.push(doc.data());
+                });
+
+                if (highScores.length > 0) {
+                     finalHighScoresList.innerHTML = highScores
+                        .map((score, index) => `<li><span class="rank-medal">${getMedal(index)}</span>${index + 1}. ${score.name} - <span>${score.score} pontos</span></li>`)
+                        .join('');
+                } else {
+                    finalHighScoresList.innerHTML = '<li>Nenhuma pontuação registrada.</li>';
+                }
+            } catch (error) {
+                console.error("Erro ao buscar pontuações:", error);
+                finalHighScoresList.innerHTML = '<li>Erro ao carregar o placar. Tente novamente.</li>';
+            }
+        });
+
+        const closeTheScoresModal = () => { scoresModal.style.display = 'none'; };
+        closeScoresBtn.addEventListener('click', closeTheScoresModal);
+        window.addEventListener('click', (event) => {
+            if (event.target == scoresModal) { closeTheScoresModal(); }
+        });
+
         const levelThresholds = { 2: 350, 3: 900, 4: Infinity };
         const config = { 1: { sentenceCount: 7, speed: 1.3 }, 2: { sentenceCount: 10, speed: 1.8 }, 3: { sentenceCount: 12, speed: 2.4 }};
-
-          const sentencesByLevel = {
+        const sentencesByLevel = {
             1: [
-                // FRASES CORRETAS
-                { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null },
-                { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null },
-                { text: 'Agradecemos o seu contato e a sua paciência.', correct: true, correction: null },
-                { text: 'O sistema está instável no momento, peço que aguarde.', correct: true, correction: null },
-                { text: 'Compreendo perfeitamente a sua situação.', correct: true, correction: null },
-                { text: 'Vou verificar o procedimento e já lhe dou um retorno.', correct: true, correction: null },
-                { text: 'Para sua segurança, por favor, confirme seu nome completo.', correct: true, correction: null },
-                { text: 'A questão foi encaminhada para a equipe responsável.', correct: true, correction: null },
-                // FRASES INCORRETAS
-                { text: 'O cliente iniciou o atendimento de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' },
-                { text: 'Eu entendo sua frustração, mais não posso alterar o sistema.', correct: false, correction: 'Erro de ortografia. "Mas" é usado para indicar oposição. "Mais" é usado para indicar quantidade.' },
-                { text: 'Houveram muitas ligações sobre a instabilidade hoje.', correct: false, correction: 'Erro de concordância. O verbo "haver" no sentido de "existir" é impessoal. O correto é: "Houve muitas ligações...".' },
-                { text: 'As informação do cliente não bate com nosso registro.', correct: false, correction: 'Erro de concordância. O correto é: "As informações do cliente não batem...".' },
-                { text: 'Por favor, seje paciente enquanto verifico o ocorrido.', correct: false, correction: 'Erro de ortografia e conjugação. A forma correta do verbo "ser" no imperativo é "seja".' },
-                { text: 'O sistema precisa de mas tempo para processar.', correct: false, correction: 'Erro de ortografia. "Mais" é usado para indicar quantidade. "Mas" é usado para indicar oposição.' },
-                { text: 'Segue anexo as duas faturas que você solicitou.', correct: false, correction: 'Erro de concordância. O correto é: "Seguem anexas as duas faturas...".' },
-                { text: 'Acho que o cliente está com um poblema na conexão.', correct: false, correction: 'Erro de ortografia. A grafia correta da palavra é "problema".' }
+                { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null }, { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null }, { text: 'Agradecemos o seu contato e a sua paciência.', correct: true, correction: null }, { text: 'O sistema está instável no momento, peço que aguarde.', correct: true, correction: null }, { text: 'Compreendo perfeitamente a sua situação.', correct: true, correction: null }, { text: 'Vou verificar o procedimento e já lhe dou um retorno.', correct: true, correction: null }, { text: 'Para sua segurança, por favor, confirme seu nome completo.', correct: true, correction: null }, { text: 'A questão foi encaminhada para a equipe responsável.', correct: true, correction: null },
+                { text: 'O cliente iniciou o atendimento de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' }, { text: 'Eu entendo sua frustração, mais não posso alterar o sistema.', correct: false, correction: 'Erro de ortografia. "Mas" é usado para indicar oposição. "Mais" é usado para indicar quantidade.' }, { text: 'Houveram muitas ligações sobre a instabilidade hoje.', correct: false, correction: 'Erro de concordância. O verbo "haver" no sentido de "existir" é impessoal. O correto é: "Houve muitas ligações...".' }, { text: 'As informação do cliente não bate com nosso registro.', correct: false, correction: 'Erro de concordância. O correto é: "As informações do cliente não batem...".' }, { text: 'Por favor, seje paciente enquanto verifico o ocorrido.', correct: false, correction: 'Erro de ortografia e conjugação. A forma correta do verbo "ser" no imperativo é "seja".' }, { text: 'O sistema precisa de mas tempo para processar.', correct: false, correction: 'Erro de ortografia. "Mais" é usado para indicar quantidade. "Mas" é usado para indicar oposição.' }, { text: 'Segue anexo as duas faturas que você solicitou.', correct: false, correction: 'Erro de concordância. O correto é: "Seguem anexas as duas faturas...".' }, { text: 'Acho que o cliente está com um poblema na conexão.', correct: false, correction: 'Erro de ortografia. A grafia correta da palavra é "problema".' }
             ],
             2: [
-                // FRASES CORRETAS
-                { text: 'A supervisora nos orientou para que tivéssemos discrição.', correct: true, correction: null },
-                { text: 'O prazo para eu finalizar o relatório é amanhã.', correct: true, correction: null },
-                { text: 'Por favor, ratifique os dados para prosseguirmos com o cadastro.', correct: true, correction: null },
-                { text: 'Se o problema persistir, entre em contato com o suporte.', correct: true, correction: null },
-                { text: 'Ele se esforçou a fim de bater a meta do mês.', correct: true, correction: null },
-                { text: 'Em vez de cancelar, o cliente decidiu alterar o plano.', correct: true, correction: null },
-                { text: 'Quando o cliente vier à loja, entregue este documento a ele.', correct: true, correction: null },
-                { text: 'É importante que você mantenha a calma durante atendimentos difíceis.', correct: true, correction: null },
-                // FRASES INCORRETAS
-                { text: 'A gerente pediu para mim fazer a ligação para o cliente.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "pediu para eu fazer...".' },
-                { text: 'Quando você ver o novo chamado, pode assumir a tarefa.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "ver" é "vir". O correto é: "Quando você vir...".' },
-                { text: 'Peço total descrição ao manusear os dados sensíveis.', correct: false, correction: 'Erro de vocabulário. "Discrição" significa reserva, prudência. "Descrição" é o ato de descrever. O correto é: "discrição".' },
-                { text: 'Estou organizando a planilha afim de otimizar o processo.', correct: false, correction: 'Erro de ortografia. "A fim de" (separado) significa "com o objetivo de". "Afim" (junto) é um adjetivo que significa "semelhante".' },
-                { text: 'Se o sistema manter o erro, teremos que abrir um chamado.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "manter" é "mantiver". O correto é: "Se o sistema mantiver...".' },
-                { text: 'Não há mais tarefas para mim fazer hoje.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "tarefas para eu fazer...".' },
-                { text: 'Preciso que você retifique o recebimento deste e-mail.', correct: false, correction: 'Erro de vocabulário. "Ratificar" significa confirmar. "Retificar" significa corrigir. O correto é: "ratifique o recebimento".' },
-                { text: 'Ao invés de enviar um e-mail, ele preferiu ligar.', correct: false, correction: 'A expressão "em vez de" é mais adequada para substituições em geral. "Ao invés de" se usa para opostos diretos (subir/descer).' }
+                { text: 'A supervisora nos orientou para que tivéssemos discrição.', correct: true, correction: null }, { text: 'O prazo para eu finalizar o relatório é amanhã.', correct: true, correction: null }, { text: 'Por favor, ratifique os dados para prosseguirmos com o cadastro.', correct: true, correction: null }, { text: 'Se o problema persistir, entre em contato com o suporte.', correct: true, correction: null }, { text: 'Ele se esforçou a fim de bater a meta do mês.', correct: true, correction: null }, { text: 'Em vez de cancelar, o cliente decidiu alterar o plano.', correct: true, correction: null }, { text: 'Quando o cliente vier à loja, entregue este documento a ele.', correct: true, correction: null }, { text: 'É importante que você mantenha a calma durante atendimentos difíceis.', correct: true, correction: null },
+                { text: 'A gerente pediu para mim fazer a ligação para o cliente.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "pediu para eu fazer...".' }, { text: 'Quando você ver o novo chamado, pode assumir a tarefa.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "ver" é "vir". O correto é: "Quando você vir...".' }, { text: 'Peço total descrição ao manusear os dados sensíveis.', correct: false, correction: 'Erro de vocabulário. "Discrição" significa reserva, prudência. "Descrição" é o ato de descrever. O correto é: "discrição".' }, { text: 'Estou organizando a planilha afim de otimizar o processo.', correct: false, correction: 'Erro de ortografia. "A fim de" (separado) significa "com o objetivo de". "Afim" (junto) é um adjetivo que significa "semelhante".' }, { text: 'Se o sistema manter o erro, teremos que abrir um chamado.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "manter" é "mantiver". O correto é: "Se o sistema mantiver...".' }, { text: 'Não há mais tarefas para mim fazer hoje.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "tarefas para eu fazer...".' }, { text: 'Preciso que você retifique o recebimento deste e-mail.', correct: false, correction: 'Erro de vocabulário. "Ratificar" significa confirmar. "Retificar" significa corrigir. O correto é: "ratifique o recebimento".' }, { text: 'Ao invés de enviar um e-mail, ele preferiu ligar.', correct: false, correction: 'A expressão "em vez de" é mais adequada para substituições em geral. "Ao invés de" se usa para opostos diretos (subir/descer).' }
             ],
             3: [
-                // FRASES CORRETAS
-                { text: 'O motivo por que liguei é para confirmar o seu endereço.', correct: true, correction: null },
-                { text: 'Ele não explicou o porquê de sua ausência na reunião.', correct: true, correction: null },
-                { text: 'Aonde devemos encaminhar esta solicitação de serviço?', correct: true, correction: null },
-                { text: 'Não sei onde a equipe de suporte está alocada.', correct: true, correction: null },
-                { text: 'Existem várias maneiras de contornar este problema.', correct: true, correction: null },
-                { text: 'Havia apenas uma pendência em seu antigo cadastro.', correct: true, correction: null },
-                { text: 'A última atualização do sistema ocorreu há duas semanas.', correct: true, correction: null },
-                { text: 'O técnico chegará ao local daqui a uma hora.', correct: true, correction: null },
-                // FRASES INCORRETAS
-                { text: 'Aonde está o erro que você mencionou no sistema?', correct: false, correction: 'Erro de vocabulário. "Onde" é usado para lugares fixos. "Aonde" é usado com verbos de movimento. O correto é: "Onde está...".' },
-                { text: 'Eu trabalho nesta empresa a mais de cinco anos.', correct: false, correction: 'Erro de ortografia. "Há" (com H) é usado para tempo passado. "A" (sem H) é usado para tempo futuro ou distância.' },
-                { text: 'Você não respondeu o e-mail. Por que?', correct: false, correction: 'Erro de ortografia. "Por quê" (separado e com acento) é usado no final de frases interrogativas.' },
-                { text: 'Deve existir muitas razões para a instabilidade.', correct: false, correction: 'Erro de concordância. O verbo "existir" concorda com o sujeito. O correto é: "Devem existir muitas razões...".' },
-                { text: 'O técnico não sabe onde o time de desenvolvimento foi.', correct: false, correction: 'Erro de vocabulário. Com verbos de movimento (como "ir"), usa-se "aonde". O correto é: "...aonde o time... foi".' },
-                { text: 'Gostaria de entender o porque de tanta demora.', correct: false, correction: 'Erro de ortografia. Quando é um substantivo e significa "o motivo", o correto é "porquê" (junto e com acento).' },
-                { text: 'Daqui há alguns minutos o sistema deve voltar.', correct: false, correction: 'Erro de ortografia. Para indicar tempo futuro, usa-se "a" (sem H). O correto é: "Daqui a alguns minutos...".' },
-                { text: 'A razão porquê ele ligou não foi informada.', correct: false, correction: 'Erro de ortografia. Quando pode ser substituído por "pela qual", o correto é "por que" (separado e sem acento).' }
+                { text: 'O motivo por que liguei é para confirmar o seu endereço.', correct: true, correction: null }, { text: 'Ele não explicou o porquê de sua ausência na reunião.', correct: true, correction: null }, { text: 'Aonde devemos encaminhar esta solicitação de serviço?', correct: true, correction: null }, { text: 'Não sei onde a equipe de suporte está alocada.', correct: true, correction: null }, { text: 'Existem várias maneiras de contornar este problema.', correct: true, correction: null }, { text: 'Havia apenas uma pendência em seu antigo cadastro.', correct: true, correction: null }, { text: 'A última atualização do sistema ocorreu há duas semanas.', correct: true, correction: null }, { text: 'O técnico chegará ao local daqui a uma hora.', correct: true, correction: null },
+                { text: 'Aonde está o erro que você mencionou no sistema?', correct: false, correction: 'Erro de vocabulário. "Onde" é usado para lugares fixos. "Aonde" é usado com verbos de movimento. O correto é: "Onde está...".' }, { text: 'Eu trabalho nesta empresa a mais de cinco anos.', correct: false, correction: 'Erro de ortografia. "Há" (com H) é usado para tempo passado. "A" (sem H) é usado para tempo futuro ou distância.' }, { text: 'Você não respondeu o e-mail. Por que?', correct: false, correction: 'Erro de ortografia. "Por quê" (separado e com acento) é usado no final de frases interrogativas.' }, { text: 'Deve existir muitas razões para a instabilidade.', correct: false, correction: 'Erro de concordância. O verbo "existir" concorda com o sujeito. O correto é: "Devem existir muitas razões...".' }, { text: 'O técnico não sabe onde o time de desenvolvimento foi.', correct: false, correction: 'Erro de vocabulário. Com verbos de movimento (como "ir"), usa-se "aonde". O correto é: "...aonde o time... foi".' }, { text: 'Gostaria de entender o porque de tanta demora.', correct: false, correction: 'Erro de ortografia. Quando é um substantivo e significa "o motivo", o correto é "porquê" (junto e com acento).' }, { text: 'Daqui há alguns minutos o sistema deve voltar.', correct: false, correction: 'Erro de ortografia. Para indicar tempo futuro, usa-se "a" (sem H). O correto é: "Daqui a alguns minutos...".' }, { text: 'A razão porquê ele ligou não foi informada.', correct: false, correction: 'Erro de ortografia. Quando pode ser substituído por "pela qual", o correto é "por que" (separado e sem acento).' }
             ]
         };
+
         let currentSentences = sentencesByLevel[currentLevel];
        
         function getSentenceFromDOM(element) { return Object.values(sentencesByLevel).flat().find(s => s.text === element.textContent); }
@@ -135,10 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
         function updateProgressBar() {
             const prevThreshold = (currentLevel === 1) ? 0 : levelThresholds[currentLevel];
             const nextThreshold = levelThresholds[currentLevel + 1];
-            if (!nextThreshold || nextThreshold === Infinity) {
-                progressBarEl.style.width = '100%';
-                return;
-            }
+            if (!nextThreshold || nextThreshold === Infinity) { progressBarEl.style.width = '100%'; return; }
             const range = nextThreshold - prevThreshold;
             const progressInLevel = score - prevThreshold;
             const progress = (progressInLevel / range) * 100;
@@ -158,9 +199,7 @@ window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const index = sentencesOnScreen.findIndex(s => s.element === sentenceEl);
                 if (index > -1) { sentencesOnScreen.splice(index, 1); }
-                if (sentenceEl.parentElement) {
-                    sentenceEl.remove();
-                }
+                if (sentenceEl.parentElement) { sentenceEl.remove(); }
             }, delay);
         }
 
@@ -168,26 +207,18 @@ window.addEventListener('DOMContentLoaded', () => {
             const clickedEl = event.target;
             const sentenceData = getSentenceFromDOM(clickedEl);
             if (!sentenceData || clickedEl.classList.contains('clicked')) return;
-            
             clickedEl.classList.add('clicked');
-
             if (sentenceData.correct) {
                 correctHitCounter++;
                 if (correctHitCounter >= 5) { scoreMultiplier = 2; }
                 score += (5 + timeLeft) * scoreMultiplier;
-                
                 clickedEl.classList.add('correct-flash');
                 setTimeout(() => {
                     removeSentence(clickedEl);
-                    if (correctHitCounter > 0 && correctHitCounter % 5 === 0) {
-                        refreshBoard(true);
-                    } else {
-                        checkBoardStateAndReplace();
-                    }
+                    if (correctHitCounter > 0 && correctHitCounter % 5 === 0) { refreshBoard(true); } else { checkBoardStateAndReplace(); }
                     checkLevelUp();
                     updateUI();
                 }, 500);
-
             } else {
                 lives--;
                 correctHitCounter = 0;
@@ -195,9 +226,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const mistakeText = sentenceData.text;
                 if (mistakeTracker[mistakeText]) { mistakeTracker[mistakeText].count++; }
                 else { mistakeTracker[mistakeText] = { count: 1, correction: sentenceData.correction }; }
-                
                 clickedEl.classList.add('incorrect-shake');
-                
                 setTimeout(() => {
                     removeSentence(clickedEl);
                     checkBoardStateAndReplace();
@@ -268,15 +297,8 @@ window.addEventListener('DOMContentLoaded', () => {
             startGame();
         }
         
-        if(playAgainBtn) {
-            playAgainBtn.addEventListener('click', resetGame);
-        }
-
-        if(mainMenuBtn) {
-            mainMenuBtn.addEventListener('click', () => {
-                window.location.href = 'index.html';
-            });
-        }
+        if(playAgainBtn) { playAgainBtn.addEventListener('click', resetGame); }
+        if(mainMenuBtn) { mainMenuBtn.addEventListener('click', () => { window.location.href = 'index.html'; }); }
 
         function startGame() {
             updateUI();
@@ -303,14 +325,12 @@ window.addEventListener('DOMContentLoaded', () => {
                 timeLeft = 60;
                 correctHitCounter = 0;
                 scoreMultiplier = 1;
-                
                 clearInterval(timerInterval);
                 const nextLevelScreen = document.createElement('div');
                 nextLevelScreen.className = 'modal-container';
                 nextLevelScreen.style.display = 'flex';
                 nextLevelScreen.innerHTML = `<div class="modal-content" style="text-align: center;"><h2>Nível ${currentLevel}</h2><p>A dificuldade vai aumentar. Prepare-se!</p><button>Continuar</button></div>`;
                 document.body.appendChild(nextLevelScreen);
-                
                 nextLevelScreen.querySelector('button').onclick = () => {
                     nextLevelScreen.remove();
                     refreshBoard(false);
@@ -335,7 +355,20 @@ window.addEventListener('DOMContentLoaded', () => {
             animationFrameId = requestAnimationFrame(animateSentences);
         }
         
-        function endGame() {
+        async function endGame() {
+            const playerName = localStorage.getItem('playerFullName') || 'Cadete Anônimo';
+            
+            try {
+                const { collection, addDoc } = window.firestore;
+                await addDoc(collection(window.db, "highscores"), {
+                    name: playerName,
+                    score: score,
+                    createdAt: new Date()
+                });
+            } catch (error) {
+                console.error("Erro ao salvar pontuação: ", error);
+            }
+            
             clearInterval(timerInterval);
             cancelAnimationFrame(animationFrameId);
             gameUi.style.display = 'none';
