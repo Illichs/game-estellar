@@ -18,7 +18,7 @@ h1 { font-weight: 900; margin-bottom: 20px; font-size: 3.8em; white-space: nowra
 form { display: flex; flex-direction: column; align-items: center; }
 input { font-family: 'UOLtext_', sans-serif; width: 100%; max-width: 350px; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #088a85; background-color: #1a1a3a; color: #ffffff; font-size: 1em; text-align: center; }
 input:focus { outline: none; border-color: #0abfba; box-shadow: 0 0 10px #0abfba; }
-.button-container { display: flex; justify-content: center; gap: 15px; }
+.button-container { display: flex; justify-content: center; align-items: center; gap: 15px; }
 button { font-family: 'UOLtext_', sans-serif; font-weight: 700; padding: 12px 25px; border: none; border-radius: 5px; background-color: #088a85; color: #ffffff; font-size: 1.1em; cursor: pointer; transition: all 0.3s ease; }
 button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transform: scale(1.05); }
 #tutorialBtn { background-color: transparent; border: 1px solid #088a85; }
@@ -45,8 +45,8 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 .modal-content h2 { text-align: center; color: #0abfba; font-weight: 700; }
 .modal-content ul { list-style-type: '➤ '; padding-left: 20px; }
 .modal-content li { margin-bottom: 10px; }
-.close-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5em; font-weight: bold; color: #fff; cursor: pointer; transition: color 0.3s; }
-.close-btn:hover { color: #0abfba; }
+.close-btn, .close-scores-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5em; font-weight: bold; color: #fff; cursor: pointer; transition: color 0.3s; }
+.close-btn:hover, .close-scores-btn:hover { color: #0abfba; }
 .results-summary { text-align: center; font-size: 1.5em; font-weight: 700; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #088a85; }
 #resultsScreen h3 { text-align: center; color: #0abfba; font-weight: 700; }
 #mistakesList { list-style: none; padding: 0; margin: 0 0 30px 0; }
@@ -54,3 +54,44 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 #mistakesList .incorrect-text { display: block; color: #ffcccc; font-style: italic; font-size: 1.1em; }
 #mistakesList .correct-text { display: block; color: #ccffcc; font-weight: 300; font-size: 1em; margin-top: 8px; }
 .mistake-count { font-size: 1.1em; font-weight: 700; color: #ff4d4d; background-color: rgba(255, 0, 0, 0.2); padding: 3px 8px; border-radius: 5px; margin-left: 15px; }
+
+/* --- NOVOS ESTILOS ADICIONADOS --- */
+.action-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    vertical-align: middle;
+}
+.action-icon:hover {
+    transform: scale(1.15);
+}
+
+.button-container button.secondary {
+    background-color: transparent;
+    border: 1px solid #088a85;
+}
+.button-container button.secondary:hover {
+    background-color: #088a85;
+}
+
+#highScoresList, #finalHighScoresList {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+    text-align: left;
+}
+#highScoresList li, #finalHighScoresList li {
+    font-size: 1.1em;
+    padding: 10px;
+    border-bottom: 1px solid rgba(8, 138, 133, 0.3);
+    font-weight: 300;
+}
+#highScoresList li:last-child, #finalHighScoresList li:last-child {
+    border-bottom: none;
+}
+#highScoresList li span, #finalHighScoresList li span {
+    font-weight: 700;
+    color: #ffffff;
+    float: right;
+}
