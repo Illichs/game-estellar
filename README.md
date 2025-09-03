@@ -1,11 +1,11 @@
-#  Space Sentences: Treinamento e Desenvolvimento Gamificado.
+#  O Conflito Gramatical: Treinamento e Desenvolvimento Gamificado.
 
 Um jogo educacional interativo projetado para gamificar o treinamento, aprimorando a tomada de decisão e o raciocínio rápido em cenários de trabalho.
 
 
 ## **🎯 Sobre o Projeto**  
 Em ambientes corporativos, a capacidade de pensar com clareza e tomar decisões acertadas sob pressão é uma competência essencial. No entanto, os métodos tradicionais de treinamento podem, por vezes, ser monótonos e pouco eficazes para desenvolver essa agilidade mental.\
-O Space Sentences nasceu como uma solução para este desafio. Este projeto transforma o aprendizado em uma missão espacial engajadora, onde o jogador (ou colaborador) deve exercitar seu conhecimento e agilidade para navegar por um "espaço sideral" de informações. O objetivo é simples na forma, mas profundo no propósito: gamificar o pensar e reforçar colocações rotineiras de trabalho de uma maneira divertida e memorável.
+O Conflito Gramatical nasceu como uma solução para este desafio. Este projeto transforma o aprendizado em uma missão espacial engajadora, onde o jogador (ou colaborador) deve exercitar seu conhecimento e agilidade para navegar por um "espaço sideral" de informações. O objetivo é simples na forma, mas profundo no propósito: gamificar o pensar e reforçar colocações rotineiras de trabalho de uma maneira divertida e memorável.
 
 
 ## **🚀 Como Funciona**
@@ -19,7 +19,7 @@ Dificuldade Progressiva: Com 3 níveis de dificuldade, o jogo adapta-se a difere
 
 ## **💡 Objetivo Pedagógico**
 
-Mais do que um simples jogo, o Space Sentences é uma ferramenta de T&D (Treinamento e Desenvolvimento) com os seguintes objetivos pedagógicos:
+Mais do que um simples jogo, o Conflito Gramatical é uma ferramenta de T&D (Treinamento e Desenvolvimento) com os seguintes objetivos pedagógicos:
 Exercitar o Raciocínio Rápido: O ambiente dinâmico força o cérebro a analisar e filtrar informações rapidamente, uma habilidade crucial em qualquer função.
 Reforçar Conhecimento Específico: O conteúdo das frases é 100% personalizável. Pode ser usado para treinar:\
 Gramática e Comunicação: Como na versão atual.\
