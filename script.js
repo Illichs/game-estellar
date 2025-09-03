@@ -66,7 +66,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (highScores.length > 0) {
                     highScoresList.innerHTML = highScores
-                        .map((score, index) => `<li><span class="rank-medal">${getMedal(index)}</span>${index + 1}. ${score.name} - <span>${score.score} pontos</span></li>`)
+                        .map((score, index) => {
+                            return `<li>
+                                <div class="rank-info">
+                                    <span class="rank-medal">${getMedal(index)}</span>
+                                    <div class="player-details">
+                                        <span class="player-name">${index + 1}. ${score.name}</span>
+                                        <span class="team-name">${score.team}</span>
+                                    </div>
+                                </div>
+                                <div class="score-info">
+                                    <span class="player-score">${score.score} pts</span>
+                                    <span class="level-badge">Nível ${score.level}</span>
+                                </div>
+                            </li>`;
+                        })
                         .join('');
                 } else {
                     highScoresList.innerHTML = '<li>Nenhuma pontuação registrada. Seja o primeiro!</li>';
@@ -138,7 +152,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (highScores.length > 0) {
                      finalHighScoresList.innerHTML = highScores
-                        .map((score, index) => `<li><span class="rank-medal">${getMedal(index)}</span>${index + 1}. ${score.name} - <span>${score.score} pontos</span></li>`)
+                        .map((score, index) => {
+                            return `<li>
+                                <div class="rank-info">
+                                    <span class="rank-medal">${getMedal(index)}</span>
+                                    <div class="player-details">
+                                        <span class="player-name">${index + 1}. ${score.name}</span>
+                                        <span class="team-name">${score.team}</span>
+                                    </div>
+                                </div>
+                                <div class="score-info">
+                                    <span class="player-score">${score.score} pts</span>
+                                    <span class="level-badge">Nível ${score.level}</span>
+                                </div>
+                            </li>`;
+                        })
                         .join('');
                 } else {
                     finalHighScoresList.innerHTML = '<li>Nenhuma pontuação registrada.</li>';
@@ -357,12 +385,15 @@ window.addEventListener('DOMContentLoaded', () => {
         
         async function endGame() {
             const playerName = localStorage.getItem('playerFullName') || 'Cadete Anônimo';
+            const playerTeam = localStorage.getItem('playerTeam') || 'Sem Equipe';
             
             try {
                 const { collection, addDoc } = window.firestore;
                 await addDoc(collection(window.db, "highscores"), {
                     name: playerName,
+                    team: playerTeam,
                     score: score,
+                    level: currentLevel,
                     createdAt: new Date()
                 });
             } catch (error) {
