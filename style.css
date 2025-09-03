@@ -40,16 +40,71 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 .sentence:hover { transform: scale(1.05); box-shadow: 0 0 20px #0abfba; }
 .sentence.correct-flash { animation: correct-flash 0.5s ease-out; }
 .sentence.incorrect-shake { animation: incorrect-shake 0.5s ease-in-out; }
-.modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; }
-.modal-content { background-color: #1a1a3a; padding: 20px 40px 40px 40px; border-radius: 15px; border: 1px solid #088a85; text-align: left; box-shadow: 0 0 30px #088a85; max-width: 600px; position: relative; }
-.modal-content h2 { text-align: center; color: #0abfba; font-weight: 700; }
-.modal-content ul { list-style-type: '➤ '; padding-left: 20px; }
-.modal-content li { margin-bottom: 10px; }
-.close-btn, .close-scores-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5em; font-weight: bold; color: #fff; cursor: pointer; transition: color 0.3s; }
+
+/* --- BLOCO DE ESTILOS DO MODAL E PLACAR (ATUALIZADO) --- */
+
+.modal-container { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 100; 
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content { 
+    background-color: #1a1a3a; 
+    padding: 20px 30px 30px 30px;
+    border-radius: 15px; 
+    border: 1px solid #088a85; 
+    text-align: left; 
+    box-shadow: 0 0 30px #088a85; 
+    width: 100%;
+    max-width: 600px; 
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh; /* Garante que o modal nunca seja maior que a tela */
+}
+
+.modal-content h2 { 
+    text-align: center; 
+    color: #0abfba; 
+    font-weight: 700; 
+    margin-bottom: 20px;
+}
+
+.modal-content ul { 
+    list-style-type: '➤ '; 
+    padding-left: 20px;
+}
+
+.modal-content li { 
+    margin-bottom: 10px; 
+}
+
+.close-btn, .close-scores-btn { 
+    position: absolute; 
+    top: 10px; 
+    right: 20px; 
+    font-size: 2.5em; 
+    font-weight: bold; 
+    color: #fff; 
+    cursor: pointer; 
+    transition: color 0.3s; 
+    z-index: 10;
+}
 .close-btn:hover, .close-scores-btn:hover { color: #0abfba; }
+
 .results-summary { text-align: center; font-size: 1.5em; font-weight: 700; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #088a85; }
 #resultsScreen h3 { text-align: center; color: #0abfba; font-weight: 700; }
-#mistakesList { list-style: none; padding: 0; margin: 0 0 30px 0; }
+#mistakesList { list-style: none; padding: 0; margin: 0 0 30px 0; overflow-y: auto; }
 #mistakesList li { background-color: rgba(0, 0, 0, 0.2); border-left: 4px solid #ff4d4d; padding: 15px; margin-bottom: 10px; border-radius: 5px; display: flex; flex-direction: column; align-items: flex-start; }
 #mistakesList .incorrect-text { display: block; color: #ffcccc; font-style: italic; font-size: 1.1em; }
 #mistakesList .correct-text { display: block; color: #ccffcc; font-weight: 300; font-size: 1em; margin-top: 8px; }
@@ -59,14 +114,28 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 .action-icon:hover { transform: scale(1.15); }
 .button-container button.secondary { background-color: transparent; border: 1px solid #088a85; }
 .button-container button.secondary:hover { background-color: #088a85; }
-#highScoresList, #finalHighScoresList { list-style: none; padding: 0; margin: 20px 0 0 0; text-align: left; }
 
-/* --- ESTILOS PARA O PLACAR DETALHADO --- */
+/* ESTILOS REFINADOS PARA O PLACAR (LEADERBOARD) */
+#highScoresList, #finalHighScoresList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Adiciona a barra de rolagem */
+    padding-right: 10px; 
+}
+
+#highScoresList li:only-child, #finalHighScoresList li:only-child {
+    border-bottom: none;
+    text-align: center;
+    opacity: 0.7;
+    padding: 20px;
+}
+
 #highScoresList li, #finalHighScoresList li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 10px;
+    padding: 12px 0;
     font-weight: 400;
     border-bottom: 1px solid rgba(8, 138, 133, 0.3);
 }
