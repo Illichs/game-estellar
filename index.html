@@ -12,15 +12,38 @@
     
     <div id="tutorialModal" class="modal-container">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
             <h2>Instruções da Missão</h2>
-            <p>Sua missão é simples, mas desafiadora:</p>
-            <ul>
-                <li>Frases corretas e incorretas flutuarão pelo espaço.</li>
-                <li>Clique <strong>apenas nas frases gramaticalmente corretas</strong>.</li>
-                <li>Acumule pontos para subir de nível e aumentar o desafio.</li>
-            </ul>
-            <p>Boa sorte, Cadete!</p>
+            
+            <div class="modal-body">
+                <h4>Objetivo Principal</h4>
+                <p>Bem-vindo ao seu treinamento, Cadete! O objetivo desta simulação é aprimorar suas habilidades de comunicação e escrita, identificando erros gramaticais comuns em um ambiente desafiador e divertido.</p>
+                
+                <h4>Como Jogar</h4>
+                <ul class="instruction-list">
+                    <li>
+                        <span class="list-icon">▶</span> 
+                        <span>Clique <strong>apenas nas frases CORRETAS</strong> para ganhar pontos. Elas desaparecerão e novas surgirão.</span>
+                    </li>
+                    <li>
+                        <span class="list-icon">▶</span> 
+                        <span>Clicar em uma frase <strong>INCORRETA</strong> fará você perder uma vida!</span>
+                    </li>
+                </ul>
+
+                <h4>Painel de Controle</h4>
+                <ul class="instruction-list">
+                    <li><span class="ui-icon">❤️</span> <span><strong>Vidas:</strong> Você começa com 3 vidas.</span></li>
+                    <li><span class="ui-icon">⏱️</span> <span><strong>Cronômetro:</strong> Você tem <strong>60 segundos</strong> para marcar o máximo de pontos.</span></li>
+                    <li><span class="ui-icon">🔥</span> <span><strong>Combo:</strong> Acerte 5 frases corretas em sequência para ativar um multiplicador de pontos!</span></li>
+                </ul>
+
+                <h4>Progressão da Missão</h4>
+                <p>Sua missão é dividida em <strong>3 fases</strong>. A cada fase, novos desafios gramaticais são introduzidos e a velocidade das frases aumenta. Mostre que você está pronto para o desafio!</p>
+            </div>
+            
+            <div class="button-container tutorial-start">
+                <button id="startGameBtn">Estou Pronto!</button>
+            </div>
         </div>
     </div>
 
@@ -34,8 +57,7 @@
                 <input type="text" id="team" placeholder="Nome da Equipe" required>
                 <div class="button-container">
                     <button type="submit">Iniciar Missão</button>
-                    <img src="Imagens/Icon astro game.png" alt="Placar de Campeões" id="leaderboardIcon" class="action-icon">
-                    <button type="button" id="tutorialBtn">Como Jogar?</button>
+                    <img src="Imagens/icon astro game.png" alt="Placar de Campeões" id="leaderboardIcon" class="action-icon">
                 </div>
             </form>
         </div>
@@ -50,25 +72,11 @@
     </div>
 
     <script type="module">
-      // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyBZRBZEJFuaKXj6l4eo840VMrdy0xPCs54",
-        authDomain: "conflito-gramatical.firebaseapp.com",
-        projectId: "conflito-gramatical",
-        storageBucket: "conflito-gramatical.firebasestorage.app",
-        messagingSenderId: "829154552759",
-        appId: "1:829154552759:web:92bd6769e598e195291632"
-      };
-
-      // Initialize Firebase
+      const firebaseConfig = { apiKey: "AIzaSyBZRBZEJFuaKXj6l4eo840VMrdy0xPCs54", authDomain: "conflito-gramatical.firebaseapp.com", projectId: "conflito-gramatical", storageBucket: "conflito-gramatical.firebasestorage.app", messagingSenderId: "829154552759", appId: "1:829154552759:web:92bd6769e598e195291632" };
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-
-      // Disponibiliza o 'db' e as funções do Firestore para o nosso script.js
       window.db = db;
       window.firestore = { collection, addDoc, getDocs, query, orderBy, limit };
     </script>
@@ -76,4 +84,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
