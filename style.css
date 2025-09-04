@@ -1,9 +1,5 @@
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_regular.ttf') format('truetype'); font-weight: 400; }
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_bold.ttf') format('truetype'); font-weight: 700; }
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_black.ttf') format('truetype'); font-weight: 900; }
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_light.ttf') format('truetype'); font-weight: 300; }
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_thin.ttf') format('truetype'); font-weight: 100; }
-@font-face { font-family: 'UOLtext_'; src: url('Fonts/UOLtext_italic.ttf') format('truetype'); font-weight: 400; font-style: italic; }
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes correct-flash { 50% { background-color: rgba(40, 167, 69, 0.7); border-color: #ffffff; transform: scale(0.95); } }
 @keyframes incorrect-shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } 50% { background-color: rgba(220, 53, 69, 0.7); border-color: #ffffff; } }
@@ -14,15 +10,13 @@ body { margin: 0; font-family: 'UOLtext_', sans-serif; font-weight: 400; color: 
 h1 { font-weight: 900; margin-bottom: 20px; font-size: 3.8em; white-space: nowrap; color: transparent; text-align: center; background: linear-gradient(45deg, #0abfba, #088a85, #0abfba); -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 1.5px #0abfba; text-stroke: 1.5px #0abfba; filter: drop-shadow(0 0 10px rgba(10, 191, 186, 0.7)); }
 .form-container { width: 100%; max-width: 550px; background-color: rgba(13, 13, 33, 0.7); padding: 30px 40px 40px 40px; border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid #088a85; box-shadow: 0 0 20px rgba(8, 138, 133, 0.5); animation: fadeIn 1s ease-out; text-align: center; }
 .form-container h2 { font-weight: 700; margin-top: 0; }
-.form-container p { font-weight: 300; font-size: 0.9em; max-width: 350px; margin: 15px auto 30px auto; }
+.form-container p { font-weight: 300; font-size: 0.9em; max-width: 400px; margin: 15px auto 30px auto; }
 form { display: flex; flex-direction: column; align-items: center; }
 input { font-family: 'UOLtext_', sans-serif; width: 100%; max-width: 350px; padding: 12px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #088a85; background-color: #1a1a3a; color: #ffffff; font-size: 1em; text-align: center; }
 input:focus { outline: none; border-color: #0abfba; box-shadow: 0 0 10px #0abfba; }
 .button-container { display: flex; justify-content: center; align-items: center; gap: 15px; }
 button { font-family: 'UOLtext_', sans-serif; font-weight: 700; padding: 12px 25px; border: none; border-radius: 5px; background-color: #088a85; color: #ffffff; font-size: 1.1em; cursor: pointer; transition: all 0.3s ease; }
 button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transform: scale(1.05); }
-#tutorialBtn { background-color: transparent; border: 1px solid #088a85; }
-#tutorialBtn:hover { background-color: #088a85; }
 .game-ui { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: center; background-color: rgba(13, 13, 33, 0.7); padding: 5px 20px; border-radius: 15px; z-index: 10; border: 1px solid #088a85; backdrop-filter: blur(5px); }
 .ui-group { display: flex; align-items: center; gap: 25px; }
 .ui-group.center { flex-direction: column; gap: 5px; }
@@ -40,68 +34,13 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 .sentence:hover { transform: scale(1.05); box-shadow: 0 0 20px #0abfba; }
 .sentence.correct-flash { animation: correct-flash 0.5s ease-out; }
 .sentence.incorrect-shake { animation: incorrect-shake 0.5s ease-in-out; }
-
-/* --- BLOCO DE ESTILOS DO MODAL E PLACAR (ATUALIZADO) --- */
-
-.modal-container { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0, 0, 0, 0.7); 
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 100; 
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.modal-content { 
-    background-color: #1a1a3a; 
-    padding: 20px 30px 30px 30px;
-    border-radius: 15px; 
-    border: 1px solid #088a85; 
-    text-align: left; 
-    box-shadow: 0 0 30px #088a85; 
-    width: 100%;
-    max-width: 600px; 
-    position: relative; 
-    display: flex;
-    flex-direction: column;
-    max-height: 85vh; /* Garante que o modal nunca seja maior que a tela */
-}
-
-.modal-content h2 { 
-    text-align: center; 
-    color: #0abfba; 
-    font-weight: 700; 
-    margin-bottom: 20px;
-}
-
-.modal-content ul { 
-    list-style-type: '➤ '; 
-    padding-left: 20px;
-}
-
-.modal-content li { 
-    margin-bottom: 10px; 
-}
-
-.close-btn, .close-scores-btn { 
-    position: absolute; 
-    top: 10px; 
-    right: 20px; 
-    font-size: 2.5em; 
-    font-weight: bold; 
-    color: #fff; 
-    cursor: pointer; 
-    transition: color 0.3s; 
-    z-index: 10;
-}
+.modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px; box-sizing: border-box; }
+.modal-content { background-color: #1a1a3a; padding: 20px 30px 30px 30px; border-radius: 15px; border: 1px solid #088a85; text-align: left; box-shadow: 0 0 30px #088a85; width: 100%; max-width: 600px; position: relative; display: flex; flex-direction: column; max-height: 90vh; animation: fadeIn 0.5s ease-out; }
+.modal-content h2 { text-align: center; color: #0abfba; font-weight: 700; margin-bottom: 10px; }
+.modal-content ul { list-style: none; padding: 0; margin: 15px 0; }
+.modal-content li { margin-bottom: 10px; }
+.close-btn, .close-scores-btn { position: absolute; top: 10px; right: 20px; font-size: 2.5em; font-weight: bold; color: #fff; cursor: pointer; transition: color 0.3s; z-index: 10; }
 .close-btn:hover, .close-scores-btn:hover { color: #0abfba; }
-
 .results-summary { text-align: center; font-size: 1.5em; font-weight: 700; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #088a85; }
 #resultsScreen h3 { text-align: center; color: #0abfba; font-weight: 700; }
 #mistakesList { list-style: none; padding: 0; margin: 0 0 30px 0; overflow-y: auto; }
@@ -109,36 +48,16 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 #mistakesList .incorrect-text { display: block; color: #ffcccc; font-style: italic; font-size: 1.1em; }
 #mistakesList .correct-text { display: block; color: #ccffcc; font-weight: 300; font-size: 1em; margin-top: 8px; }
 .mistake-count { font-size: 1.1em; font-weight: 700; color: #ff4d4d; background-color: rgba(255, 0, 0, 0.2); padding: 3px 8px; border-radius: 5px; margin-left: 15px; }
-
 .action-icon { width: 40px; height: 40px; cursor: pointer; transition: transform 0.2s ease-in-out; vertical-align: middle; }
 .action-icon:hover { transform: scale(1.15); }
+.button-container.tutorial-start { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(8, 138, 133, 0.3); }
+#startGameBtn { background-color: #28a745; border-color: #28a745; font-size: 1.2em; }
+#startGameBtn:hover { background-color: #218838; border-color: #1e7e34; }
 .button-container button.secondary { background-color: transparent; border: 1px solid #088a85; }
 .button-container button.secondary:hover { background-color: #088a85; }
-
-/* ESTILOS REFINADOS PARA O PLACAR (LEADERBOARD) */
-#highScoresList, #finalHighScoresList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto; /* Adiciona a barra de rolagem */
-    padding-right: 10px; 
-}
-
-#highScoresList li:only-child, #finalHighScoresList li:only-child {
-    border-bottom: none;
-    text-align: center;
-    opacity: 0.7;
-    padding: 20px;
-}
-
-#highScoresList li, #finalHighScoresList li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    font-weight: 400;
-    border-bottom: 1px solid rgba(8, 138, 133, 0.3);
-}
+#highScoresList, #finalHighScoresList { list-style: none; padding: 0; margin: 0; overflow-y: auto; padding-right: 10px; }
+#highScoresList li:only-child, #finalHighScoresList li:only-child { border-bottom: none; text-align: center; opacity: 0.7; padding: 20px; }
+#highScoresList li, #finalHighScoresList li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-weight: 400; border-bottom: 1px solid rgba(8, 138, 133, 0.3); }
 #highScoresList li:last-child, #finalHighScoresList li:last-child { border-bottom: none; }
 .rank-info { display: flex; align-items: center; text-align: left; }
 .rank-medal { display: inline-block; width: 30px; text-align: left; font-size: 1.2em; }
@@ -148,3 +67,18 @@ button:hover { background-color: #0abfba; box-shadow: 0 0 15px #0abfba; transfor
 .score-info { text-align: right; }
 .player-score { font-weight: 700; display: block; font-size: 1.1em; }
 .level-badge { font-size: 0.8em; font-weight: 700; color: #1a1a3a; background-color: #0abfba; padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+.modal-content h4 { margin-top: 25px; margin-bottom: 10px; color: #0abfba; }
+.modal-content p { margin-bottom: 15px; line-height: 1.5; }
+.instruction-list li { display: flex; align-items: flex-start; margin-bottom: 12px; line-height: 1.4; }
+.instruction-list .list-icon { font-size: 1.2em; margin-right: 10px; color: #0abfba; flex-shrink: 0; padding-top: 2px; }
+.instruction-list .ui-icon { font-size: 1.8em; margin-right: 10px; flex-shrink: 0; padding-top: 0; }
+#playerName, #playerTeam { max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* NOVA REGRA PARA O CONTEÚDO ROLÁVEL DO MODAL */
+.modal-body {
+    overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+    padding-right: 15px; /* Espaço para a barra de rolagem */
+    margin-right: -15px; /* Compensa o padding para manter o alinhamento */
+    flex-grow: 1; /* Faz esta área crescer para preencher o espaço */
+    margin-bottom: 15px; /* Espaço antes do botão */
+}
