@@ -153,7 +153,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         
         const levelThresholds = { 2: 350, 3: 900, 4: Infinity };
-        const config = { 1: { sentenceCount: 7, speed: 0.8 }, 2: { sentenceCount: 10, speed: 1.1 }, 3: { sentenceCount: 12, speed: 1.5 }};
+        const config = { 1: { sentenceCount: 7, speed: 0.8 }, 2: { sentenceCount: 10, speed: 1.0 }, 3: { sentenceCount: 12, speed: 1.2 }};
         const sentencesByLevel = {
             1: [
                 { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null },
@@ -452,3 +452,4 @@ window.addEventListener('DOMContentLoaded', () => {
         initializeGame();
     }
 });
+
