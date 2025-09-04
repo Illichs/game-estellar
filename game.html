@@ -17,6 +17,20 @@
                     <p id="timer">--</p>
                 </div>
             </div>
+            <div class="ui-item">
+                <span class="ui-icon">🧑‍🚀</span>
+                <div class="ui-text">
+                    <h3>Cadete</h3>
+                    <p id="playerName">Carregando...</p>
+                </div>
+            </div>
+            <div class="ui-item">
+                <span class="ui-icon">🛡️</span>
+                <div class="ui-text">
+                    <h3>Equipe</h3>
+                    <p id="playerTeam">Carregando...</p>
+                </div>
+            </div>
         </div>
         
         <div class="ui-group center">
@@ -77,25 +91,11 @@
     </div>
 
     <script type="module">
-      // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyBZRBZEJFuaKXj6l4eo840VMrdy0xPCs54",
-        authDomain: "conflito-gramatical.firebaseapp.com",
-        projectId: "conflito-gramatical",
-        storageBucket: "conflito-gramatical.firebasestorage.app",
-        messagingSenderId: "829154552759",
-        appId: "1:829154552759:web:92bd6769e598e195291632"
-      };
-
-      // Initialize Firebase
+      const firebaseConfig = { apiKey: "AIzaSyBZRBZEJFuaKXj6l4eo840VMrdy0xPCs54", authDomain: "conflito-gramatical.firebaseapp.com", projectId: "conflito-gramatical", storageBucket: "conflito-gramatical.firebasestorage.app", messagingSenderId: "829154552759", appId: "1:829154552759:web:92bd6769e598e195291632" };
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-
-      // Disponibiliza o 'db' e as funções do Firestore para o nosso script.js
       window.db = db;
       window.firestore = { collection, addDoc, getDocs, query, orderBy, limit };
     </script>
