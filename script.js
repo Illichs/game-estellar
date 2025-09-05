@@ -20,24 +20,96 @@ window.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'game.html';
         });
 
+        // LÓGICA DOS ASTRONAUTAS ATUALIZADA
         const astroContainer = document.getElementById('astro-container');
         if (astroContainer) {
-            const astronautImages = ['Astro Foguete.png', 'Astro Peso.png', 'Astro Super.png', 'Astro Voo.png'];
+            // NOVA "FICHA DE CADASTRO" DOS ASTRONAUTAS - REVISADO COM SUAS IMAGENS
+            // 'left': Imagem naturalmente aponta para a esquerda
+            // 'right': Imagem naturalmente aponta para a direita
+            // 'none': Imagem é simétrica ou a direção não importa
+            const astronautData = [
+                { file: 'Astro Alien Fog.png', orientation: 'none' }, // Parece ir para a direita com o foguete
+                { file: 'Astro Baloon.png', orientation: 'right' }, // Balões puxam para a direita
+                { file: 'Astro Band.png', orientation: 'none' }, // Parece simétrico
+                { file: 'Astro Carr Lua.png', orientation: 'none' }, // Carro não tem frente definida no desenho
+                { file: 'Astro Estrela.png', orientation: 'none' }, // Flutuando em direção à estrela
+                { file: 'Astro Foguete 2.png', orientation: 'right' }, // Foguete indo para a direita
+                { file: 'Astro Foguete 3.png', orientation: 'right' }, // Foguete indo para a direita
+                { file: 'Astro Lua.png', orientation: 'none' }, // Flutuando na lua
+                { file: 'Astro Peso.png', orientation: 'none' }, // Levantando peso, simétrico
+                { file: 'Astro Pux Lua.png', orientation: 'right' }, // Puxando a lua para a direita
+                { file: 'Astro Super.png', orientation: 'right' }, // Voando para a direita
+                { file: 'Astro Voa Alie.png', orientation: 'left' }, // Alien e astronauta indo para a direita
+                { file: 'Astro Voo.png', orientation: 'right' }, // Astronauta voando para a direita
+                { file: 'Astro Zen.png', orientation: 'none' }, // Meditando, simétrico
+                { file: 'Astro Foguete.png', orientation: 'left' } // Foguete para a direita
+            ];
+
             function createRandomAstronaut() {
                 const astroImg = document.createElement('img');
-                const randomImage = astronautImages[Math.floor(Math.random() * astronautImages.length)];
-                astroImg.src = `Imagens/${randomImage}`;
+                const randomAstronaut = astronautData[Math.floor(Math.random() * astronautData.length)];
+                
+                astroImg.src = `Imagens/${randomAstronaut.file}`;
                 astroImg.className = 'astro-dynamic';
-                const startX = Math.random() * window.innerWidth; const startY = window.innerHeight + 150;
-                const endX = startX + (Math.random() * 400 - 200); const endY = -200;
-                astroImg.style.left = `${startX}px`; astroImg.style.top = `${startY}px`;
-                const duration = Math.random() * 8 + 10; const delay = Math.random() * 5;
+                
+                const startX = Math.random() * window.innerWidth;
+                const startY = window.innerHeight + 150; // Começa de baixo
+                const endY = -200; // Termina acima da tela
+
+                // Decide aleatoriamente se o movimento será para a esquerda (-1) ou para a direita (1)
+                const movementDirectionX = Math.random() < 0.5 ? -1 : 1;
+                
+                // Calcula a posição final X (pode ir para fora da tela)
+                const horizontalMovementRange = window.innerWidth * 0.7; // Movimento horizontal de até 70% da largura da tela
+                const endX = startX + (movementDirectionX * (Math.random() * horizontalMovementRange + window.innerWidth * 0.1)); // Garante algum movimento lateral
+
+                let scaleX = 1; // Padrão: sem inversão
+
+                // Lógica para determinar o scaleX baseado na direção do movimento e orientação natural
+                if (randomAstronaut.orientation === 'right') {
+                    if (movementDirectionX === -1) { // Se o movimento é para a esquerda, mas a imagem olha para a direita
+                        scaleX = -1; // Inverte
+                    }
+                } else if (randomAstronaut.orientation === 'left') {
+                    if (movementDirectionX === 1) { // Se o movimento é para a direita, mas a imagem olha para a esquerda
+                        scaleX = -1; // Inverte
+                    }
+                } else { // 'none' ou outra orientação, segue a direção do movimento
+                    scaleX = movementDirectionX; // Se for simétrico, scaleX pode ser -1 para ir para a esquerda
+                }
+
+                // Aplica a inversão inicial para que ela não mude no meio do caminho
+                astroImg.style.transform = `scaleX(${scaleX})`; 
+                
+                astroImg.style.left = `${startX}px`;
+                astroImg.style.top = `${startY}px`;
+
+                const duration = Math.random() * 8 + 12; // Duração da animação em segundos (12 a 20s)
+                const delay = Math.random() * 7; // Atraso para o próximo astronauta aparecer
+
+                // A transição de transform agora inclui o translate e o scaleX
                 astroImg.style.transition = `transform ${duration}s linear ${delay}s`;
                 astroContainer.appendChild(astroImg);
-                setTimeout(() => { astroImg.style.transform = `translate(${endX - startX}px, ${endY - startY}px)`; }, 100);
-                setTimeout(() => { astroImg.remove(); }, (duration + delay) * 1000 + 1000);
+
+                // Força o reflow para garantir que a transição comece do estado inicial
+                astroImg.offsetHeight; 
+
+                setTimeout(() => {
+                    // Atualiza o transform para incluir o movimento vertical e horizontal, mantendo o scaleX
+                    astroImg.style.transform = `translate(${endX - startX}px, ${endY - startY}px) scaleX(${scaleX})`;
+                }, 100); // Pequeno atraso para a transição ser notada
+
+                // Remove o astronauta após a transição
+                setTimeout(() => {
+                    astroImg.remove();
+                }, (duration + delay) * 1000 + 1000);
             }
-            function spawnAstronauts() { createRandomAstronaut(); const randomInterval = Math.random() * 5000 + 3000; setTimeout(spawnAstronauts, randomInterval); }
+
+            function spawnAstronauts() { 
+                createRandomAstronaut(); 
+                const randomInterval = Math.random() * 3000 + 2000; // Intervalo para aparecer novos astronautas (2 a 5s)
+                setTimeout(spawnAstronauts, randomInterval); 
+            }
             spawnAstronauts();
         }
         
@@ -153,61 +225,19 @@ window.addEventListener('DOMContentLoaded', () => {
         });
         
         const levelThresholds = { 2: 350, 3: 900, 4: Infinity };
-        const config = { 1: { sentenceCount: 7, speed: 0.8 }, 2: { sentenceCount: 10, speed: 1.0 }, 3: { sentenceCount: 12, speed: 1.2 }};
+        const config = { 1: { sentenceCount: 7, speed: 0.8 }, 2: { sentenceCount: 10, speed: 1.2 }, 3: { sentenceCount: 12, speed: 1.6 }};
         const sentencesByLevel = {
             1: [
-                { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null },
-                { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null },
-                { text: 'Agradecemos o seu contato e a sua paciência.', correct: true, correction: null },
-                { text: 'O sistema está instável no momento, peço que aguarde.', correct: true, correction: null },
-                { text: 'Compreendo perfeitamente a sua situação.', correct: true, correction: null },
-                { text: 'Vou verificar o procedimento e já lhe dou um retorno.', correct: true, correction: null },
-                { text: 'Para sua segurança, por favor, confirme seu nome completo.', correct: true, correction: null },
-                { text: 'A questão foi encaminhada para a equipe responsável.', correct: true, correction: null },
-                { text: 'O cliente iniciou o atendimento de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' },
-                { text: 'Eu entendo sua frustração, mais não posso alterar o sistema.', correct: false, correction: 'Erro de ortografia. "Mas" é usado para indicar oposição. "Mais" é usado para indicar quantidade.' },
-                { text: 'Houveram muitas ligações sobre a instabilidade hoje.', correct: false, correction: 'Erro de concordância. O verbo "haver" no sentido de "existir" é impessoal. O correto é: "Houve muitas ligações...".' },
-                { text: 'As informação do cliente não bate com nosso registro.', correct: false, correction: 'Erro de concordância. O correto é: "As informações do cliente não batem...".' },
-                { text: 'Por favor, seje paciente enquanto verifico o ocorrido.', correct: false, correction: 'Erro de ortografia e conjugação. A forma correta do verbo "ser" no imperativo é "seja".' },
-                { text: 'O sistema precisa de mas tempo para processar.', correct: false, correction: 'Erro de ortografia. "Mais" é usado para indicar quantidade. "Mas" é usado para indicar oposição.' },
-                { text: 'Segue anexo as duas faturas que você solicitou.', correct: false, correction: 'Erro de concordância. O correto é: "Seguem anexas as duas faturas...".' },
-                { text: 'Acho que o cliente está com um poblema na conexão.', correct: false, correction: 'Erro de ortografia. A grafia correta da palavra é "problema".' }
+                { text: 'Sua solicitação foi registrada com sucesso.', correct: true, correction: null }, { text: 'Posso ajudar em mais alguma coisa?', correct: true, correction: null }, { text: 'Agradecemos o seu contato e a sua paciência.', correct: true, correction: null }, { text: 'O sistema está instável no momento, peço que aguarde.', correct: true, correction: null }, { text: 'Compreendo perfeitamente a sua situação.', correct: true, correction: null }, { text: 'Vou verificar o procedimento e já lhe dou um retorno.', correct: true, correction: null }, { text: 'Para sua segurança, por favor, confirme seu nome completo.', correct: true, correction: null }, { text: 'A questão foi encaminhada para a equipe responsável.', correct: true, correction: null },
+                { text: 'O cliente iniciou o atendimento de mal humor.', correct: false, correction: 'Erro de ortografia. "Mal" é o oposto de "bem". "Mau" é o oposto de "bom". O correto é: "mau humor".' }, { text: 'Eu entendo sua frustração, mais não posso alterar o sistema.', correct: false, correction: 'Erro de ortografia. "Mas" é usado para indicar oposição. "Mais" é usado para indicar quantidade.' }, { text: 'Houveram muitas ligações sobre a instabilidade hoje.', correct: false, correction: 'Erro de concordância. O verbo "haver" no sentido de "existir" é impessoal. O correto é: "Houve muitas ligações...".' }, { text: 'As informação do cliente não bate com nosso registro.', correct: false, correction: 'Erro de concordância. O correto é: "As informações do cliente não batem...".' }, { text: 'Por favor, seje paciente enquanto verifico o ocorrido.', correct: false, correction: 'Erro de ortografia e conjugação. A forma correta do verbo "ser" no imperativo é "seja".' }, { text: 'O sistema precisa de mas tempo para processar.', correct: false, correction: 'Erro de ortografia. "Mais" é usado para indicar quantidade. "Mas" é usado para indicar oposição.' }, { text: 'Segue anexo as duas faturas que você solicitou.', correct: false, correction: 'Erro de concordância. O correto é: "Seguem anexas as duas faturas...".' }, { text: 'Acho que o cliente está com um poblema na conexão.', correct: false, correction: 'Erro de ortografia. A grafia correta da palavra é "problema".' }
             ],
             2: [
-                { text: 'A supervisora nos orientou para que tivéssemos discrição.', correct: true, correction: null },
-                { text: 'O prazo para eu finalizar o relatório é amanhã.', correct: true, correction: null },
-                { text: 'Por favor, ratifique os dados para prosseguirmos com o cadastro.', correct: true, correction: null },
-                { text: 'Se o problema persistir, entre em contato com o suporte.', correct: true, correction: null },
-                { text: 'Ele se esforçou a fim de bater a meta do mês.', correct: true, correction: null },
-                { text: 'Em vez de cancelar, o cliente decidiu alterar o plano.', correct: true, correction: null },
-                { text: 'Quando o cliente vier à loja, entregue este documento a ele.', correct: true, correction: null },
-                { text: 'É importante que você mantenha a calma durante atendimentos difíceis.', correct: true, correction: null },
-                { text: 'A gerente pediu para mim fazer a ligação para o cliente.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "pediu para eu fazer...".' },
-                { text: 'Quando você ver o novo chamado, pode assumir a tarefa.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "ver" é "vir". O correto é: "Quando você vir...".' },
-                { text: 'Peço total descrição ao manusear os dados sensíveis.', correct: false, correction: 'Erro de vocabulário. "Discrição" significa reserva, prudência. "Descrição" é o ato de descrever. O correto é: "discrição".' },
-                { text: 'Estou organizando a planilha afim de otimizar o processo.', correct: false, correction: 'Erro de ortografia. "A fim de" (separado) significa "com o objetivo de". "Afim" (junto) é um adjetivo que significa "semelhante".' },
-                { text: 'Se o sistema manter o erro, teremos que abrir um chamado.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "manter" é "mantiver". O correto é: "Se o sistema mantiver...".' },
-                { text: 'Não há mais tarefas para mim fazer hoje.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "tarefas para eu fazer...".' },
-                { text: 'Preciso que você retifique o recebimento deste e-mail.', correct: false, correction: 'Erro de vocabulário. "Ratificar" significa confirmar. "Retificar" significa corrigir. O correto é: "ratifique o recebimento".' },
-                { text: 'Ao invés de enviar um e-mail, ele preferiu ligar.', correct: false, correction: 'A expressão "em vez de" é mais adequada para substituições em geral. "Ao invés de" se usa para opostos diretos (subir/descer).' }
+                { text: 'A supervisora nos orientou para que tivéssemos discrição.', correct: true, correction: null }, { text: 'O prazo para eu finalizar o relatório é amanhã.', correct: true, correction: null }, { text: 'Por favor, ratifique os dados para prosseguirmos com o cadastro.', correct: true, correction: null }, { text: 'Se o problema persistir, entre em contato com o suporte.', correct: true, correction: null }, { text: 'Ele se esforçou a fim de bater a meta do mês.', correct: true, correction: null }, { text: 'Em vez de cancelar, o cliente decidiu alterar o plano.', correct: true, correction: null }, { text: 'Quando o cliente vier à loja, entregue este documento a ele.', correct: true, correction: null }, { text: 'É importante que você mantenha a calma durante atendimentos difíceis.', correct: true, correction: null },
+                { text: 'A gerente pediu para mim fazer a ligação para o cliente.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "pediu para eu fazer...".' }, { text: 'Quando você ver o novo chamado, pode assumir a tarefa.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "ver" é "vir". O correto é: "Quando você vir...".' }, { text: 'Peço total descrição ao manusear os dados sensíveis.', correct: false, correction: 'Erro de vocabulário. "Discrição" significa reserva, prudência. "Descrição" é o ato de descrever. O correto é: "discrição".' }, { text: 'Estou organizando a planilha afim de otimizar o processo.', correct: false, correction: 'Erro de ortografia. "A fim de" (separado) significa "com o objetivo de". "Afim" (junto) é um adjetivo que significa "semelhante".' }, { text: 'Se o sistema manter o erro, teremos que abrir um chamado.', correct: false, correction: 'Erro de conjugação verbal. O futuro do subjuntivo do verbo "manter" é "mantiver". O correto é: "Se o sistema mantiver...".' }, { text: 'Não há mais tarefas para mim fazer hoje.', correct: false, correction: 'Erro de pronome. Usa-se "eu" quando o pronome é o sujeito do verbo. O correto é: "tarefas para eu fazer...".' }, { text: 'Preciso que você retifique o recebimento deste e-mail.', correct: false, correction: 'Erro de vocabulário. "Ratificar" significa confirmar. "Retificar" significa corrigir. O correto é: "ratifique o recebimento".' }, { text: 'Ao invés de enviar um e-mail, ele preferiu ligar.', correct: false, correction: 'A expressão "em vez de" é mais adequada para substituições em geral. "Ao invés de" se usa para opostos diretos (subir/descer).' }
             ],
             3: [
-                { text: 'O motivo por que liguei é para confirmar o seu endereço.', correct: true, correction: null },
-                { text: 'Ele não explicou o porquê de sua ausência na reunião.', correct: true, correction: null },
-                { text: 'Aonde devemos encaminhar esta solicitação de serviço?', correct: true, correction: null },
-                { text: 'Não sei onde a equipe de suporte está alocada.', correct: true, correction: null },
-                { text: 'Existem várias maneiras de contornar este problema.', correct: true, correction: null },
-                { text: 'Havia apenas uma pendência em seu antigo cadastro.', correct: true, correction: null },
-                { text: 'A última atualização do sistema ocorreu há duas semanas.', correct: true, correction: null },
-                { text: 'O técnico chegará ao local daqui a uma hora.', correct: true, correction: null },
-                { text: 'Aonde está o erro que você mencionou no sistema?', correct: false, correction: 'Erro de vocabulário. "Onde" é usado para lugares fixos. "Aonde" é usado com verbos de movimento. O correto é: "Onde está...".' },
-                { text: 'Eu trabalho nesta empresa a mais de cinco anos.', correct: false, correction: 'Erro de ortografia. "Há" (com H) é usado para tempo passado. "A" (sem H) é usado para tempo futuro ou distância.' },
-                { text: 'Você não respondeu o e-mail. Por que?', correct: false, correction: 'Erro de ortografia. "Por quê" (separado e com acento) é usado no final de frases interrogativas.' },
-                { text: 'Deve existir muitas razões para a instabilidade.', correct: false, correction: 'Erro de concordância. O verbo "existir" concorda com o sujeito. O correto é: "Devem existir muitas razões...".' },
-                { text: 'O técnico não sabe onde o time de desenvolvimento foi.', correct: false, correction: 'Erro de vocabulário. Com verbos de movimento (como "ir"), usa-se "aonde". O correto é: "...aonde o time... foi".' },
-                { text: 'Gostaria de entender o porque de tanta demora.', correct: false, correction: 'Erro de ortografia. Quando é um substantivo e significa "o motivo", o correto é "porquê" (junto e com acento).' },
-                { text: 'Daqui há alguns minutos o sistema deve voltar.', correct: false, correction: 'Erro de ortografia. Para indicar tempo futuro, usa-se "a" (sem H). O correto é: "Daqui a alguns minutos...".' },
-                { text: 'A razão porquê ele ligou não foi informada.', correct: false, correction: 'Erro de ortografia. Quando pode ser substituído por "pela qual", o correto é "por que" (separado e sem acento).' }
+                { text: 'O motivo por que liguei é para confirmar o seu endereço.', correct: true, correction: null }, { text: 'Ele não explicou o porquê de sua ausência na reunião.', correct: true, correction: null }, { text: 'Aonde devemos encaminhar esta solicitação de serviço?', correct: true, correction: null }, { text: 'Não sei onde a equipe de suporte está alocada.', correct: true, correction: null }, { text: 'Existem várias maneiras de contornar este problema.', correct: true, correction: null }, { text: 'Havia apenas uma pendência em seu antigo cadastro.', correct: true, correction: null }, { text: 'A última atualização do sistema ocorreu há duas semanas.', correct: true, correction: null }, { text: 'O técnico chegará ao local daqui a uma hora.', correct: true, correction: null },
+                { text: 'Aonde está o erro que você mencionou no sistema?', correct: false, correction: 'Erro de vocabulário. "Onde" é usado para lugares fixos. "Aonde" é usado com verbos de movimento. O correto é: "Onde está...".' }, { text: 'Eu trabalho nesta empresa a mais de cinco anos.', correct: false, correction: 'Erro de ortografia. "Há" (com H) é usado para tempo passado. "A" (sem H) é usado para tempo futuro ou distância.' }, { text: 'Você não respondeu o e-mail. Por que?', correct: false, correction: 'Erro de ortografia. "Por quê" (separado e com acento) é usado no final de frases interrogativas.' }, { text: 'Deve existir muitas razões para a instabilidade.', correct: false, correction: 'Erro de concordância. O verbo "existir" concorda com o sujeito. O correto é: "Devem existir muitas razões...".' }, { text: 'O técnico não sabe onde o time de desenvolvimento foi.', correct: false, correction: 'Erro de vocabulário. Com verbos de movimento (como "ir"), usa-se "aonde". O correto é: "...aonde o time... foi".' }, { text: 'Gostaria de entender o porque de tanta demora.', correct: false, correction: 'Erro de ortografia. Quando é um substantivo e significa "o motivo", o correto é "porquê" (junto e com acento).' }, { text: 'Daqui há alguns minutos o sistema deve voltar.', correct: false, correction: 'Erro de ortografia. Para indicar tempo futuro, usa-se "a" (sem H). O correto é: "Daqui a alguns minutos...".' }, { text: 'A razão porquê ele ligou não foi informada.', correct: false, correction: 'Erro de ortografia. Quando pode ser substituído por "pela qual", o correto é "por que" (separado e sem acento).' }
             ]
         };
 
@@ -452,4 +482,3 @@ window.addEventListener('DOMContentLoaded', () => {
         initializeGame();
     }
 });
-
